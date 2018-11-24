@@ -1,5 +1,5 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
+import express from "express";
+import bodyParser from "body-parser";
 import { router } from "./router";
 import mongoose from "mongoose";
 import { settings } from "../settings/settings";
@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 const PORT = settings.serverPort;
 const DB_URL = settings.databaseUrl;
 
-const server = express.default();
+const server = express();
 
 mongoose
 	.connect(
