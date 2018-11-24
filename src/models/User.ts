@@ -1,4 +1,5 @@
-import { Schema, SchemaDefinition } from "mongoose";
+import { Schema, SchemaDefinition, Model } from "mongoose";
+import * as bcrypt from "bcrypt";
 import { settings } from "../settings/settings";
 import { generate } from "shortid";
 
@@ -11,4 +12,10 @@ const userTemplate: SchemaDefinition = {
 	password: { type: String, required: true }
 };
 
-export const User = new Schema(userTemplate, settings.collections.users);
+const userSchema = new Schema(userTemplate, settings.collections.users);
+
+userSchema.methods.comparePasswords = async function(password: string) {
+	return this.password == (await bcrypt.hash(password, "salt"));
+};
+
+export const User = new Model(userSchema);
