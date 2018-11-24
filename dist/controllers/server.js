@@ -13,7 +13,7 @@ mongoose_1.default.Promise = global.Promise;
 var PORT = config_1.default.serverPort;
 var DB_URL = config_1.default.databaseUrl;
 var server = express_1.default();
-var mongodb = child_process_1.spawn("mongod", ["--dbpath=\"" + config_1.default.databasePath + "\"", "--bind_ip", "127.0.0.1"]);
+var mongod = child_process_1.exec("mongod --config " + config_1.default.mongodConfPath);
 mongoose_1.default
     .connect(DB_URL, { useNewUrlParser: true })
     .then(function () { return console.log("Conected to " + DB_URL); })
@@ -23,4 +23,8 @@ server.use(body_parser_1.default.json());
 server.use(router_1.router);
 server.listen(PORT, function () {
     console.log("Server running on port " + PORT);
+});
+process.on("exit", function () {
+    if (mongod)
+        mongod.kill();
 });

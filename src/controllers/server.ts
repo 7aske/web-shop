@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import { router } from "./router";
 import mongoose from "mongoose";
 import config from "../config/config";
-import { spawn } from "child_process";
+import { exec } from "child_process";
 
 mongoose.Promise = global.Promise;
 
@@ -12,7 +12,7 @@ const DB_URL = config.databaseUrl;
 
 const server = express();
 
-const mongodb = spawn("mongod", [`--dbpath="${config.databasePath}"`, "--bind_ip", "127.0.0.1"]);
+const mongod = exec(`mongod --config ${config.mongodConfPath}`);
 
 mongoose
 	.connect(
@@ -28,4 +28,8 @@ server.use(router);
 
 server.listen(PORT, () => {
 	console.log("Server running on port " + PORT);
+});
+
+process.on("exit", () => {
+	if (mongod) mongod.kill();
 });

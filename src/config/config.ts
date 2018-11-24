@@ -1,6 +1,7 @@
 import { SchemaOptions } from "mongoose";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { execSync } from "child_process";
 
 export interface Collections {
 	users: SchemaOptions;
@@ -11,6 +12,7 @@ export interface Config {
 	databaseUrl: string;
 	databasePath: string;
 	mongodPath: string;
+	mongodConfPath: string;
 	serverPort: number;
 	hash: { salt: string; rounds: number };
 }
@@ -19,11 +21,11 @@ let configJSON: Config = JSON.parse(readFileSync(join(process.cwd(), "dist/confi
 if (configJSON.databasePath.length == 0) configJSON.databasePath = join(process.cwd(), "dist/database");
 if (configJSON.databaseUrl.length == 0) configJSON.databaseUrl = "mongodb://127.0.0.1:27017/database";
 if (configJSON.mongodPath.length == 0)
-	configJSON.mongodPath = "C:\\Program Files\\MongoDB\\Server\\4.0\\bin\\mongod.exe";
-
+	configJSON.mongodPath = execSync("where mongod")
+		.toString()
+		.split("\r\n")[0];
+if (configJSON.mongodConfPath.length == 0) configJSON.mongodConfPath = join(process.cwd(), "dist/config/mongod.cfg");
 if (isNaN(configJSON.serverPort)) configJSON.serverPort = 3000;
-
-console.log(configJSON);
 
 const config: Config = configJSON;
 

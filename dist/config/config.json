@@ -8,8 +8,9 @@
 		}
 	},
 	"databaseUrl": "mongodb://127.0.0.1:27017/database",
-	"mongodPath": "C:\\Program Files\\MongoDB\\Server\\4.0\\bin\\mongod.exe",
 	"databasePath": "",
+	"mongodPath": "",
+	"mongodConfPath": "",
 	"serverPort": 3000,
 	"hash": {
 		"salt": "saltystring",
