@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
 
-export const root = Router();
+const rootRouter = Router();
 
-root.get("/", (req: Request, res: Response) => {
+rootRouter.get("/", (req: Request, res: Response) => {
 	res.send("Hello ROOT");
 });
+
+export default rootRouter;

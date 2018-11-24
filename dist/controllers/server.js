@@ -7,16 +7,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Express = __importStar(require("express"));
+var express = __importStar(require("express"));
 var bodyParser = __importStar(require("body-parser"));
 var router_1 = require("./router");
 var mongoose_1 = require("mongoose");
 var settings_1 = require("../settings/settings");
 var PORT = settings_1.settings.serverPort;
 var DB_URL = settings_1.settings.databaseUrl;
-var server = Express.default();
-var conn = new mongoose_1.Mongoose()
-    .connect(DB_URL)
+var server = express.default();
+var mongoose = new mongoose_1.Mongoose();
+mongoose
+    .connect(DB_URL, { useNewUrlParser: true })
     .then(function () { return console.log("Conected to " + DB_URL); })
     .catch(function () { return console.log("Failed connecting to " + DB_URL); });
 server.use(bodyParser.urlencoded({ extended: true }));

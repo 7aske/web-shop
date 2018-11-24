@@ -34,16 +34,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var bcrypt = __importStar(require("bcrypt"));
+var mongoose_1 = __importDefault(require("mongoose"));
+var bcrypt_1 = __importDefault(require("bcrypt"));
 var settings_1 = require("../settings/settings");
 var shortid_1 = require("shortid");
 var userTemplate = {
@@ -54,7 +50,7 @@ var userTemplate = {
     lastName: { type: String, required: true },
     password: { type: String, required: true }
 };
-var userSchema = new mongoose_1.Schema(userTemplate, settings_1.settings.collections.users);
+var userSchema = new mongoose_1.default.Schema(userTemplate, settings_1.settings.collections.users);
 userSchema.methods.comparePasswords = function (password) {
     return __awaiter(this, void 0, void 0, function () {
         var _a;
@@ -62,10 +58,11 @@ userSchema.methods.comparePasswords = function (password) {
             switch (_b.label) {
                 case 0:
                     _a = this.password;
-                    return [4 /*yield*/, bcrypt.hash(password, "salt")];
+                    return [4 /*yield*/, bcrypt_1.default.hash(password, settings_1.settings.hash.rounds)];
                 case 1: return [2 /*return*/, _a == (_b.sent())];
             }
         });
     });
 };
-exports.User = new mongoose_1.Model(userSchema);
+var UserModel = mongoose_1.default.model("User", userSchema);
+exports.default = UserModel;

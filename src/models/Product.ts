@@ -1,14 +1,16 @@
-import { Schema, SchemaDefinition, Model } from "mongoose";
+import mongoose from "mongoose";
 import { settings } from "../settings/settings";
 import { generate } from "shortid";
 
-const productDefinition: SchemaDefinition = {
+export const productDefinition: mongoose.SchemaDefinition = {
 	pid: { type: String, default: generate },
 	name: { type: String, required: true },
 	quantity: { type: Number, default: 0 },
 	price: { type: String, default: 0 }
 };
 
-const productSchema = new Schema(productDefinition, settings.collections.products);
+const productSchema = new mongoose.Schema(productDefinition, settings.collections.products);
 
-export const User = new Model(productSchema);
+const ProductModel = mongoose.model("Product", productSchema);
+
+export default ProductModel;

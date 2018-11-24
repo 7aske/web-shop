@@ -1,11 +1,13 @@
 import { Router, Request, Response } from "express";
 
-export const products = Router();
+const productsRouter = Router();
 
-products.get("/", (req: Request, res: Response) => {
+productsRouter.get("/", (req: Request, res: Response) => {
 	res.send("Hello Products");
 });
-products.get("/:pid", (req: Request, res: Response) => {
+productsRouter.get("/:pid", (req: Request, res: Response) => {
 	const pid: string = req.params.pid;
 	res.send("Hello Products " + pid);
 });
+
+export default productsRouter;
