@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { settings } from "../settings/settings";
+import config from "../config/config";
 import { generate } from "shortid";
 
 export interface userDefinition {
@@ -21,10 +21,10 @@ const userTemplate: mongoose.SchemaDefinition = {
 	password: { type: String, required: true }
 };
 
-const userSchema = new mongoose.Schema(userTemplate, settings.collections.users);
+const userSchema = new mongoose.Schema(userTemplate, config.collections.users);
 
 userSchema.methods.comparePasswords = async function(password: string) {
-	return this.password == (await bcrypt.hash(password, settings.hash.rounds));
+	return this.password == (await bcrypt.hash(password, config.hash.rounds));
 };
 
 const UserModel = mongoose.model("User", userSchema);

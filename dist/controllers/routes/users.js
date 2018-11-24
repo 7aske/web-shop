@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var User_1 = __importDefault(require("../../models/User"));
-var settings_1 = require("../../settings/settings");
+var config_1 = __importDefault(require("../../config/config"));
 var shortid_1 = require("shortid");
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var usersRouter = express_1.Router();
@@ -31,7 +31,7 @@ usersRouter.post("/register", function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: bcrypt_1.default.hashSync(req.body.password, settings_1.settings.hash.rounds)
+        password: bcrypt_1.default.hashSync(req.body.password, config_1.default.hash.rounds)
     };
     var newUser = new User_1.default(user);
     newUser

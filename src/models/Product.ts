@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { settings } from "../settings/settings";
+import config from "../config/config";
 import { generate } from "shortid";
 
 export const productDefinition: mongoose.SchemaDefinition = {
@@ -9,7 +9,7 @@ export const productDefinition: mongoose.SchemaDefinition = {
 	price: { type: String, default: 0 }
 };
 
-const productSchema = new mongoose.Schema(productDefinition, settings.collections.products);
+const productSchema = new mongoose.Schema(productDefinition, config.collections.products);
 
 const ProductModel = mongoose.model("Product", productSchema);
 

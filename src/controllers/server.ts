@@ -2,14 +2,17 @@ import express from "express";
 import bodyParser from "body-parser";
 import { router } from "./router";
 import mongoose from "mongoose";
-import { settings } from "../settings/settings";
+import config from "../config/config";
+import { spawn } from "child_process";
 
 mongoose.Promise = global.Promise;
 
-const PORT = settings.serverPort;
-const DB_URL = settings.databaseUrl;
+const PORT = config.serverPort;
+const DB_URL = config.databaseUrl;
 
 const server = express();
+
+const mongodb = spawn("mongod", [`--dbpath="${config.databasePath}"`, "--bind_ip", "127.0.0.1"]);
 
 mongoose
 	.connect(

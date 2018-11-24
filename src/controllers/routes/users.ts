@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import UserModel, { userDefinition } from "../../models/User";
-import { settings } from "../../settings/settings";
+import config from "../../config/config";
 import { generate } from "shortid";
 import bcrypt from "bcrypt";
 const usersRouter = Router();
@@ -31,7 +31,7 @@ usersRouter.post("/register", (req: Request, res: Response) => {
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		email: req.body.email,
-		password: bcrypt.hashSync(req.body.password, settings.hash.rounds)
+		password: bcrypt.hashSync(req.body.password, config.hash.rounds)
 	};
 
 	let newUser = new UserModel(user);

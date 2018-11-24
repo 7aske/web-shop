@@ -7,11 +7,13 @@ var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var router_1 = require("./router");
 var mongoose_1 = __importDefault(require("mongoose"));
-var settings_1 = require("../settings/settings");
+var config_1 = __importDefault(require("../config/config"));
+var child_process_1 = require("child_process");
 mongoose_1.default.Promise = global.Promise;
-var PORT = settings_1.settings.serverPort;
-var DB_URL = settings_1.settings.databaseUrl;
+var PORT = config_1.default.serverPort;
+var DB_URL = config_1.default.databaseUrl;
 var server = express_1.default();
+var mongodb = child_process_1.spawn("mongod", ["--dbpath=\"" + config_1.default.databasePath + "\"", "--bind_ip", "127.0.0.1"]);
 mongoose_1.default
     .connect(DB_URL, { useNewUrlParser: true })
     .then(function () { return console.log("Conected to " + DB_URL); })

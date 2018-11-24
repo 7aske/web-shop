@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
-var settings_1 = require("../settings/settings");
+var config_1 = __importDefault(require("../config/config"));
 var shortid_1 = require("shortid");
 var userTemplate = {
     uid: { type: String, default: shortid_1.generate },
@@ -50,7 +50,7 @@ var userTemplate = {
     lastName: { type: String, required: true },
     password: { type: String, required: true }
 };
-var userSchema = new mongoose_1.default.Schema(userTemplate, settings_1.settings.collections.users);
+var userSchema = new mongoose_1.default.Schema(userTemplate, config_1.default.collections.users);
 userSchema.methods.comparePasswords = function (password) {
     return __awaiter(this, void 0, void 0, function () {
         var _a;
@@ -58,7 +58,7 @@ userSchema.methods.comparePasswords = function (password) {
             switch (_b.label) {
                 case 0:
                     _a = this.password;
-                    return [4 /*yield*/, bcrypt_1.default.hash(password, settings_1.settings.hash.rounds)];
+                    return [4 /*yield*/, bcrypt_1.default.hash(password, config_1.default.hash.rounds)];
                 case 1: return [2 /*return*/, _a == (_b.sent())];
             }
         });
