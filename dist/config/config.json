@@ -7,7 +7,7 @@
 			"collection": "products"
 		}
 	},
-	"databaseUrl": "mongodb://127.0.0.1:27017/database",
+	"databaseUrl": "mongodb://127.0.0.1:27017/db",
 	"databasePath": "",
 	"mongodPath": "",
 	"mongodConfPath": "",
