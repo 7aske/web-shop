@@ -1,11 +1,22 @@
-import * as Express from "express";
+import * as express from "express";
 import * as bodyParser from "body-parser";
 import { router } from "./router";
-import * as mongoose from "mongoose";
+import { Mongoose } from "mongoose";
+import { settings } from "../settings/settings";
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const PORT = settings.serverPort;
+const DB_URL = settings.databaseUrl;
 
-const server: Express.Application = Express.default();
+const server = express.default();
+const mongoose = new Mongoose();
+
+mongoose
+	.connect(
+		DB_URL,
+		{ useNewUrlParser: true }
+	)
+	.then(() => console.log("Conected to " + DB_URL))
+	.catch(() => console.log("Failed connecting to " + DB_URL));
 
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());

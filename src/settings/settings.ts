@@ -5,6 +5,8 @@ export interface Collections {
 }
 export interface Settings {
 	collections: Collections;
+	databaseUrl: string;
+	serverPort: number;
 }
 export const settings: Settings = {
 	collections: {
@@ -14,5 +16,7 @@ export const settings: Settings = {
 		products: {
 			collection: "prodcuts"
 		}
-	}
+	},
+	databaseUrl: "mongodb://127.0.0.1/db",
+	serverPort: process.env.PORT ? parseInt(process.env.PORT) : 3000
 };
