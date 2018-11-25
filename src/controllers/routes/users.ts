@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import * as jwt from "jsonwebtoken";
 import UserModel, { userDefinition, comparePasswords, createUser } from "../../models/User";
 import config from "../../config/config";
 const usersRouter = Router();
@@ -8,16 +9,18 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 	res.status(200).send(users);
 });
 
-usersRouter.get("/:uid", (req: Request, res: Response) => {
-	const uid: string = req.params.uid;
-	res.send("Hello User " + uid);
+usersRouter.get("/dashboard", (req: Request, res: Response) => {
+	if (jwt.verify(req.body.token, config.hash.salt)) {
+		res.status(200).send(jwt.decode(req.body.token, { json: true }));
+	} else {
+		res.status(403).send({ error: "Auth failed" });
+	}
 });
 
-usersRouter.get("/:uid/dashboard", (req: Request, res: Response) => {
-	const uid: string = req.params.uid;
-
-	res.send("Hello User " + uid + " Dashoard");
-});
+// usersRouter.get("/:uid", (req: Request, res: Response) => {
+// 	const uid: string = req.params.uid;
+// 	res.send("Hello User " + uid);
+// });
 
 usersRouter.post("/register", async (req: Request, res: Response) => {
 	const user: userDefinition = {
@@ -44,8 +47,16 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 	}).exec();
 	if (user) {
 		if (comparePasswords(user, req.body.password)) {
-			//TODO: user logged in
-			res.status(200).send({ OK: 200 });
+			const token = jwt.sign(
+				{
+					user: user
+				},
+				config.hash.salt,
+				{
+					expiresIn: "1 hour"
+				}
+			);
+			res.status(200).send({ OK: 200, token: token });
 		} else {
 			res.status(401).send({ error: "Wrong password." });
 		}

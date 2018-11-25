@@ -41,10 +41,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var jwt = __importStar(require("jsonwebtoken"));
 var User_1 = __importStar(require("../../models/User"));
+var config_1 = __importDefault(require("../../config/config"));
 var usersRouter = express_1.Router();
 usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var users;
@@ -58,14 +63,18 @@ usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 
         }
     });
 }); });
-usersRouter.get("/:uid", function (req, res) {
-    var uid = req.params.uid;
-    res.send("Hello User " + uid);
+usersRouter.get("/dashboard", function (req, res) {
+    if (jwt.verify(req.body.token, config_1.default.hash.salt)) {
+        res.status(200).send(jwt.decode(req.body.token, { json: true }));
+    }
+    else {
+        res.status(403).send({ error: "Auth failed" });
+    }
 });
-usersRouter.get("/:uid/dashboard", function (req, res) {
-    var uid = req.params.uid;
-    res.send("Hello User " + uid + " Dashoard");
-});
+// usersRouter.get("/:uid", (req: Request, res: Response) => {
+// 	const uid: string = req.params.uid;
+// 	res.send("Hello User " + uid);
+// });
 usersRouter.post("/register", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var user, check, newUser;
     return __generator(this, function (_a) {
@@ -98,7 +107,7 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
     });
 }); });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user;
+    var user, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, User_1.default.findOne({
@@ -108,8 +117,12 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                 user = _a.sent();
                 if (user) {
                     if (User_1.comparePasswords(user, req.body.password)) {
-                        //TODO: user logged in
-                        res.status(200).send({ OK: 200 });
+                        token = jwt.sign({
+                            user: user
+                        }, config_1.default.hash.salt, {
+                            expiresIn: "1 hour"
+                        });
+                        res.status(200).send({ OK: 200, token: token });
                     }
                     else {
                         res.status(401).send({ error: "Wrong password." });

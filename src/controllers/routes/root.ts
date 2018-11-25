@@ -3,7 +3,7 @@ import { Router, Request, Response } from "express";
 const rootRouter = Router();
 
 rootRouter.get("/", (req: Request, res: Response) => {
-	res.send("Hello ROOT");
+	res.render("index.handlebars");
 });
 
 export default rootRouter;
