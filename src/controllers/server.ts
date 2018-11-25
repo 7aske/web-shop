@@ -7,6 +7,7 @@ import router from "./router";
 import config from "../config/config";
 import { exec } from "child_process";
 import { join } from "path";
+import morgan from "morgan";
 import checkCookie from "./middleware/checkCookie";
 
 mongoose.Promise = global.Promise;
@@ -32,6 +33,7 @@ server.set("views", join(process.cwd(), "dist/views/layouts"));
 server.engine("handlebars", exphbs({ defaultLayout: "main", layoutsDir: server.get("views") }));
 server.set("view engine", "handlebars");
 
+server.use(morgan("dev"));
 server.use(cookieParser());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
