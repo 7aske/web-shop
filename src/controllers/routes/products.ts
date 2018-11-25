@@ -1,9 +1,17 @@
 import { Router, Request, Response, NextFunction } from "express";
 import Product, { productDefinition, createProduct } from "../../models/Product";
+import checkCookie from "../middleware/checkCookie";
 const productsRouter = Router();
 
-productsRouter.get("/", (req: Request, res: Response) => {
-	res.send("Hello Products");
+productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
+	console.log(req.params);
+
+	if (req.user) {
+		const products = await Product.find({}).exec();
+		res.send(products);
+	} else {
+		res.status(403).send({ error: "Unauthorized." });
+	}
 });
 
 productsRouter.post(

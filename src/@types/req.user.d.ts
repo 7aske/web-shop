@@ -5,6 +5,7 @@ import { productDefinition } from "../models/Product";
 declare module "express" {
 	export interface Request {
 		user?: userDefinition;
+		users?: userDefinition[];
 		errors?: String[];
 		products?: productDefinition[];
 	}

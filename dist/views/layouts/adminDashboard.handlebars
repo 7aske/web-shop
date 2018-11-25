@@ -1,57 +1,81 @@
-<div class="container">
-    {{#each payload.errors}}
-    <div class="alert alert-danger">{{this}}</div>
-    {{/each}}
-</div>
+<link rel="stylesheet" href="../css/tabs.css">
 
-<div class="row p-3">
-    <div class="col-md-6">
-        <form method="post" action="/products" id="productForm">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width:5em;" id="pid">Prod. ID</span>
-                </div>
-                <input type="text" name="pid" class="form-control" aria-label="Sizing example input" aria-describedby="pid"
-                    readonly>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width:5em;" id="brand">Brand</span>
-                </div>
-                <input type="text" name="brand" class="form-control" aria-label="Sizing example input" aria-describedby="brand">
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width:5em;" id="name">Name</span>
-                </div>
-                <input type="text" name="name" class="form-control" aria-label="Sizing example input" aria-describedby="name">
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width:5em;" id="quantity">Qnty.</span>
-                </div>
-                <input type="text" name="quantity" class="form-control" aria-label="Sizing example input"
-                    aria-describedby="quantity">
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="width:5em;" id="price">Price</span>
-                </div>
-                <input type="text" name="price" class="form-control" aria-label="Sizing example input" aria-describedby="price">
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-            <button type="reset" class="btn btn-danger">Cancel</button>
-        </form>
+<input id="tab1" type="radio" name="tabs" checked>
+<label for="tab1">Products</label>
+
+<input id="tab2" type="radio" name="tabs">
+<label for="tab2">Users</label>
+
+<section id="content1">
+    <div class="container">
+        {{#each payload.errors}}
+        <div class="alert alert-danger">{{this}}</div>
+        {{/each}}
     </div>
-    <div class="col-md-6">
-        <ul class="list-group" id="productList">
-            {{#each payload.products}}
-            <li class="list-group-item list-group-item-action" style="cursor:pointer" data-pid="{{this.pid}}" data-name="{{this.name}}"
-                data-brand="{{this.brand}}" data-quantity="{{this.quantity}}" data-price="{{this.price}}"><span class=" font-weight-bold">{{this.brand}}</span>
-                -
-                {{this.name}}</li>
-            {{/each}}
-        </ul>
+    <div class="row p-3">
+        <div class="col-md-6">
+            <form method="post" action="/products" id="productForm">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="pid">Prod. ID</span>
+                    </div>
+                    <input type="text" name="pid" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="pid" readonly>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="brand">Brand</span>
+                    </div>
+                    <input type="text" name="brand" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="brand">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="name">Name</span>
+                    </div>
+                    <input type="text" name="name" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="name">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="quantity">Qnty.</span>
+                    </div>
+                    <input type="text" name="quantity" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="quantity">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="price">Price</span>
+                    </div>
+                    <input type="text" name="price" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="price">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="reset" class="btn btn-danger">Cancel</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group" id="productList">
+                {{#each payload.products}}
+                <li class="list-group-item list-group-item-action" style="cursor:pointer" data-pid="{{this.pid}}"
+                    data-name="{{this.name}}" data-brand="{{this.brand}}" data-quantity="{{this.quantity}}" data-price="{{this.price}}"><span
+                        class=" font-weight-bold">{{this.brand}}</span>
+                    -
+                    {{this.name}}</li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
-</div>
+</section>
+<section id="content2">
+    <ul class="list-group" id="usersList">
+        {{#each payload.users}}
+        <li class="list-group-item list-group-item-action" style="cursor:pointer" data-uid="{{this.pid}}" data-username="{{this.username}}"
+            data-email="{{this.email}}" data-firstName="{{this.fristName}}" data-lastName="{{this.lastName}}"><span
+                class=" font-weight-bold">{{this.username}}</span>
+            -
+            {{this.firstName}} {{this.lastName}} - {{this.email}} - {{this.uid}}</li>
+        {{/each}}
+    </ul>
+</section>
 <script src="../js/adminDashboard.js"></script>

@@ -52,17 +52,19 @@ var User_1 = require("../../models/User");
 var jwt = __importStar(require("jsonwebtoken"));
 var config_1 = __importDefault(require("../../config/config"));
 var getProducts_1 = __importDefault(require("../middleware/getProducts"));
+var getUsers_1 = __importDefault(require("../middleware/getUsers"));
 var adminRouter = express_1.Router();
 adminRouter.get("/", function (req, res) {
     res.redirect("/admin/login");
 });
-adminRouter.get("/dashboard", getProducts_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         if (req.user) {
             res.render("adminDashboard.handlebars", {
                 title: "Admin Dashboard",
                 payload: {
                     user: req.user,
+                    users: req.users,
                     products: req.products,
                     errors: req.errors
                 }
@@ -100,7 +102,7 @@ adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                     token = jwt.sign(foundAdmin, config_1.default.hash.salt, {
                         expiresIn: "2h"
                     });
-                    res.setHeader("Set-Cookie", "user=" + token + "; Path=/admin;");
+                    res.setHeader("Set-Cookie", "user=" + token + "; Path=/;");
                     res.redirect("/admin/dashboard");
                 }
                 else {

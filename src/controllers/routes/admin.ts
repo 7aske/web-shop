@@ -5,6 +5,7 @@ import * as jwt from "jsonwebtoken";
 import config from "../../config/config";
 import getProducts from "../middleware/getProducts";
 import Product, { productSchema } from "../../models/Product";
+import getUsers from "../middleware/getUsers";
 
 const adminRouter = Router();
 
@@ -12,12 +13,13 @@ adminRouter.get("/", (req: Request, res: Response) => {
 	res.redirect("/admin/login");
 });
 
-adminRouter.get("/dashboard", getProducts, async (req: Request, res: Response) => {
+adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: Response) => {
 	if (req.user) {
 		res.render("adminDashboard.handlebars", {
 			title: "Admin Dashboard",
 			payload: {
 				user: req.user,
+				users: req.users,
 				products: req.products,
 				errors: req.errors
 			}
@@ -45,7 +47,7 @@ adminRouter.post("/login", async (req: Request, res: Response) => {
 				const token = jwt.sign(foundAdmin, config.hash.salt, {
 					expiresIn: "2h"
 				});
-				res.setHeader("Set-Cookie", `user=${token}; Path=/admin;`);
+				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
 				res.redirect("/admin/dashboard");
 			} else {
 				res.status(403).send({ error: "Unauthorized." });
