@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var bcrypt_1 = __importDefault(require("bcrypt"));
+var crypto_1 = require("crypto");
 var config_1 = __importDefault(require("../config/config"));
 var shortid_1 = require("shortid");
 var userTemplate = {
@@ -51,18 +51,28 @@ var userTemplate = {
     password: { type: String, required: true }
 };
 var userSchema = new mongoose_1.default.Schema(userTemplate, config_1.default.collections.users);
-userSchema.methods.comparePasswords = function (password) {
+var UserModel = mongoose_1.default.model("User", userSchema);
+exports.default = UserModel;
+function createUser(user) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    _a = this.password;
-                    return [4 /*yield*/, bcrypt_1.default.hash(password, config_1.default.hash.rounds)];
-                case 1: return [2 /*return*/, _a == (_b.sent())];
+                    user.uid = shortid_1.generate();
+                    user.password = crypto_1.createHmac("sha256", config_1.default.hash.salt)
+                        .update(user.password)
+                        .digest("hex");
+                    return [4 /*yield*/, user.save()];
+                case 1: return [2 /*return*/, _a.sent()];
             }
         });
     });
-};
-var UserModel = mongoose_1.default.model("User", userSchema);
-exports.default = UserModel;
+}
+exports.createUser = createUser;
+function comparePasswords(user, notHashed) {
+    return (user.password ==
+        crypto_1.createHmac("sha256", config_1.default.hash.salt)
+            .update(notHashed)
+            .digest("hex"));
+}
+exports.comparePasswords = comparePasswords;

@@ -1,16 +1,12 @@
 import { Router, Request, Response } from "express";
-import UserModel, { userDefinition } from "../../models/User";
+import UserModel, { userDefinition, comparePasswords, createUser } from "../../models/User";
 import config from "../../config/config";
 import { generate } from "shortid";
-import bcrypt from "bcrypt";
 const usersRouter = Router();
 
-usersRouter.get("/", (req: Request, res: Response) => {
-	UserModel.find({})
-		.exec()
-		.then(() => console.log("Then"))
-		.catch(() => console.log("Catch"));
-	res.send("Hello Users");
+usersRouter.get("/", async (req: Request, res: Response) => {
+	const users = await UserModel.find({}).exec();
+	res.status(200).send(users);
 });
 
 usersRouter.get("/:uid", (req: Request, res: Response) => {
@@ -24,27 +20,39 @@ usersRouter.get("/:uid/dashboard", (req: Request, res: Response) => {
 	res.send("Hello User " + uid + " Dashoard");
 });
 
-usersRouter.post("/register", (req: Request, res: Response) => {
+usersRouter.post("/register", async (req: Request, res: Response) => {
 	const user: userDefinition = {
-		uid: generate(),
 		username: req.body.username,
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		email: req.body.email,
-		password: bcrypt.hashSync(req.body.password, config.hash.rounds)
+		password: req.body.password
 	};
+	const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
 
-	let newUser = new UserModel(user);
-
-	newUser
-		.save()
-		.then(u => console.log(u))
-		.catch(e => console.log(e));
-	console.log(user);
+	if (check.length == 0) {
+		const newUser = await createUser(new UserModel(user));
+		if (newUser) res.status(201).send(newUser);
+		else res.status(500).send({ error: "Something went wrong" });
+	} else {
+		res.status(401).send({ error: "Username/e-mail taken." });
+	}
 });
 
-usersRouter.post("/login", (req: Request, res: Response) => {
-	res.send("Hello Login");
+usersRouter.post("/login", async (req: Request, res: Response) => {
+	const user = await UserModel.findOne({
+		$or: [{ username: req.body.username }, { email: req.body.username }]
+	}).exec();
+	if (user) {
+		if (comparePasswords(user, req.body.password)) {
+			//TODO: user logged in
+			res.status(200).send({ OK: 200 });
+		} else {
+			res.status(401).send({ error: "Wrong password." });
+		}
+	} else {
+		res.status(401).send({ error: "User not found." });
+	}
 });
 
 export default usersRouter;

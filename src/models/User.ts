@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { createHmac } from "crypto";
 import config from "../config/config";
 import { generate } from "shortid";
 
 export interface userDefinition {
-	uid: string;
+	uid?: string;
 	username: string;
 	email: string;
 	firstName: string;
@@ -23,10 +23,23 @@ const userTemplate: mongoose.SchemaDefinition = {
 
 const userSchema = new mongoose.Schema(userTemplate, config.collections.users);
 
-userSchema.methods.comparePasswords = async function(password: string) {
-	return this.password == (await bcrypt.hash(password, config.hash.rounds));
-};
-
 const UserModel = mongoose.model("User", userSchema);
 
 export default UserModel;
+
+export async function createUser(user: any) {
+	user.uid = generate();
+	user.password = createHmac("sha256", config.hash.salt)
+		.update(user.password)
+		.digest("hex");
+	return await user.save();
+}
+
+export function comparePasswords(user: any, notHashed: string): boolean {
+	return (
+		user.password ==
+		createHmac("sha256", config.hash.salt)
+			.update(notHashed)
+			.digest("hex")
+	);
+}
