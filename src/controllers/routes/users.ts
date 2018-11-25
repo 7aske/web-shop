@@ -10,8 +10,10 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 });
 
 usersRouter.get("/dashboard", (req: Request, res: Response) => {
-	if (jwt.verify(req.body.token, config.hash.salt)) {
-		res.status(200).send(jwt.decode(req.body.token, { json: true }));
+	const token = req.body.token;
+	if (jwt.verify(token, config.hash.salt)) {
+		const decoded = jwt.decode(token);
+		res.status(200).send(decoded);
 	} else {
 		res.status(403).send({ error: "Auth failed" });
 	}
@@ -22,6 +24,10 @@ usersRouter.get("/dashboard", (req: Request, res: Response) => {
 // 	res.send("Hello User " + uid);
 // });
 
+usersRouter.get("/register", (req: Request, res: Response) => {
+	res.render("register.handlebars");
+});
+
 usersRouter.post("/register", async (req: Request, res: Response) => {
 	const user: userDefinition = {
 		username: req.body.username,
@@ -31,7 +37,6 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 		password: req.body.password
 	};
 	const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
-
 	if (check.length == 0) {
 		const newUser = await createUser(new UserModel(user));
 		if (newUser) res.status(201).send(newUser);
@@ -42,14 +47,22 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 });
 
 usersRouter.post("/login", async (req: Request, res: Response) => {
-	const user = await UserModel.findOne({
+	const user: any = await UserModel.findOne({
 		$or: [{ username: req.body.username }, { email: req.body.username }]
 	}).exec();
+
 	if (user) {
-		if (comparePasswords(user, req.body.password)) {
+		const foundUser: userDefinition = {
+			username: user.username,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email
+		};
+
+		if (comparePasswords(user.password, req.body.password)) {
 			const token = jwt.sign(
 				{
-					user: user
+					user: foundUser
 				},
 				config.hash.salt,
 				{

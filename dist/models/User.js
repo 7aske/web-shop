@@ -42,16 +42,18 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var crypto_1 = require("crypto");
 var config_1 = __importDefault(require("../config/config"));
 var shortid_1 = require("shortid");
+var Order_1 = require("./Order");
 var userTemplate = {
     uid: { type: String, default: shortid_1.generate },
     username: { type: String, required: true },
     email: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    orders: { type: [Order_1.orderSchema], default: [] }
 };
-var userSchema = new mongoose_1.default.Schema(userTemplate, config_1.default.collections.users);
-var UserModel = mongoose_1.default.model("User", userSchema);
+exports.userSchema = new mongoose_1.default.Schema(userTemplate, config_1.default.collections.users);
+var UserModel = mongoose_1.default.model("User", exports.userSchema);
 exports.default = UserModel;
 function createUser(user) {
     return __awaiter(this, void 0, void 0, function () {
@@ -69,8 +71,8 @@ function createUser(user) {
     });
 }
 exports.createUser = createUser;
-function comparePasswords(user, notHashed) {
-    return (user.password ==
+function comparePasswords(hashed, notHashed) {
+    return (hashed ==
         crypto_1.createHmac("sha256", config_1.default.hash.salt)
             .update(notHashed)
             .digest("hex"));

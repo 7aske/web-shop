@@ -64,8 +64,10 @@ usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 
     });
 }); });
 usersRouter.get("/dashboard", function (req, res) {
-    if (jwt.verify(req.body.token, config_1.default.hash.salt)) {
-        res.status(200).send(jwt.decode(req.body.token, { json: true }));
+    var token = req.body.token;
+    if (jwt.verify(token, config_1.default.hash.salt)) {
+        var decoded = jwt.decode(token);
+        res.status(200).send(decoded);
     }
     else {
         res.status(403).send({ error: "Auth failed" });
@@ -75,6 +77,9 @@ usersRouter.get("/dashboard", function (req, res) {
 // 	const uid: string = req.params.uid;
 // 	res.send("Hello User " + uid);
 // });
+usersRouter.get("/register", function (req, res) {
+    res.render("register.handlebars");
+});
 usersRouter.post("/register", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var user, check, newUser;
     return __generator(this, function (_a) {
@@ -107,7 +112,7 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
     });
 }); });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, token;
+    var user, foundUser, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, User_1.default.findOne({
@@ -116,9 +121,15 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
             case 1:
                 user = _a.sent();
                 if (user) {
-                    if (User_1.comparePasswords(user, req.body.password)) {
+                    foundUser = {
+                        username: user.username,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email
+                    };
+                    if (User_1.comparePasswords(user.password, req.body.password)) {
                         token = jwt.sign({
-                            user: user
+                            user: foundUser
                         }, config_1.default.hash.salt, {
                             expiresIn: "1 hour"
                         });

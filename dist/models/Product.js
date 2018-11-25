@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var config_1 = __importDefault(require("../config/config"));
 var shortid_1 = require("shortid");
-exports.productDefinition = {
+var productDefinition = {
     pid: { type: String, default: shortid_1.generate },
     name: { type: String, required: true },
     quantity: { type: Number, default: 0 },
     price: { type: String, default: 0 }
 };
-var productSchema = new mongoose_1.default.Schema(exports.productDefinition, config_1.default.collections.products);
-var ProductModel = mongoose_1.default.model("Product", productSchema);
+exports.productSchema = new mongoose_1.default.Schema(productDefinition, config_1.default.collections.products);
+var ProductModel = mongoose_1.default.model("Product", exports.productSchema);
 exports.default = ProductModel;
