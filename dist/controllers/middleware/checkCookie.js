@@ -15,11 +15,17 @@ var config_1 = __importDefault(require("../../config/config"));
 exports.default = (function (req, res, next) {
     var token = req.cookies.user;
     if (token) {
-        if (jwt.verify(token, config_1.default.hash.salt)) {
-            var user = jwt.decode(token);
-            req.user = user;
+        try {
+            var check = jwt.verify(token, config_1.default.hash.salt);
+            if (check) {
+                var user = jwt.decode(token);
+                req.user = user;
+            }
+            else {
+                req.user = undefined;
+            }
         }
-        else {
+        catch (err) {
             req.user = undefined;
         }
     }

@@ -1,0 +1,26 @@
+<div class="row p-3">
+    <div class="col-md-6">
+        <form method="post" action="/products">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="brand">Brand</span>
+                </div>
+                <input type="text" name="brand" class="form-control" aria-label="Sizing example input" aria-describedby="brand">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="name">Name</span>
+                </div>
+                <input type="text" name="name" class="form-control" aria-label="Sizing example input" aria-describedby="name">
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <ul class="list-group">
+            {{#each payload.products}}
+            <li class="list-group-item"><span class="font-weight-bold">{{this.brand}}</span> - {{this.name}}</li>
+            {{/each}}
+        </ul>
+    </div>
+</div>

@@ -1,12 +1,13 @@
-import { SchemaOptions } from "mongoose";
+import { SchemaOptions, Schema } from "mongoose";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { execSync } from "child_process";
 
 export interface Collections {
-	users: SchemaOptions;
-	products: SchemaOptions;
-	orders: SchemaOptions;
+	users?: SchemaOptions;
+	products?: SchemaOptions;
+	orders?: SchemaOptions;
+	admin?: SchemaOptions;
 }
 export interface Config {
 	collections: Collections;

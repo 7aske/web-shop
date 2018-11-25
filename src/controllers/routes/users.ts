@@ -11,16 +11,15 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 
 usersRouter.get("/dashboard", (req: Request, res: Response) => {
 	const user = req.user;
-
 	if (user) {
-		res.render("dashboard.handlebars", { title: "Dashboard", payload: { user } });
+		res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: user } });
 	} else {
 		res.status(403).send({ error: "Unauthorized." });
 	}
 });
 
 // usersRouter.get("/:uid", (req: Request, res: Response) => {
-// 	const uid: string = req.params.uid;
+// 	const uid: string = req.params.uid;.
 // 	res.send("Hello User " + uid);
 // });
 
@@ -45,7 +44,7 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 	if (!inputError) {
 		const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
 		if (check.length == 0) {
-			const newUser = await createUser(new UserModel(user));
+			const newUser: any = await createUser(new UserModel(user));
 			if (newUser) {
 				res.render("login.handlebars");
 			} else {
@@ -75,17 +74,19 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 			lastName: user.lastName,
 			email: user.email
 		};
-
-		if (comparePasswords(user.password, req.body.password)) {
-			const token = jwt.sign(foundUser, config.hash.salt, {
-				expiresIn: "1 hour"
-			});
-			res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
-			//res.cookie("token", token);
-			//res.status(200).send({ OK: 200, token: token });
-			res.redirect("/users/dashboard");
-		} else {
-			res.status(401).send({ error: "Wrong password." });
+		try {
+			const check = comparePasswords(user.password, req.body.password);
+			if (check) {
+				const token = jwt.sign(foundUser, config.hash.salt, {
+					expiresIn: "1d"
+				});
+				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
+				res.redirect("/users/dashboard");
+			} else {
+				res.status(403).send({ error: "Unauthorized." });
+			}
+		} catch (err) {
+			res.status(403).send({ error: "Unauthorized." });
 		}
 	} else {
 		res.status(401).send({ error: "User not found." });

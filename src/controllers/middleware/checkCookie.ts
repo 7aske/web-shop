@@ -5,10 +5,15 @@ import { userDefinition } from "../../models/User";
 export default (req: Request, res: Response, next: NextFunction) => {
 	const token = req.cookies.user;
 	if (token) {
-		if (jwt.verify(token, config.hash.salt)) {
-			const user = jwt.decode(token);
-			req.user = <userDefinition>user;
-		} else {
+		try {
+			const check = jwt.verify(token, config.hash.salt);
+			if (check) {
+				const user = jwt.decode(token);
+				req.user = <userDefinition>user;
+			} else {
+				req.user = undefined;
+			}
+		} catch (err) {
 			req.user = undefined;
 		}
 	} else {

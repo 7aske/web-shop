@@ -8,6 +8,9 @@
 		},
 		"orders": {
 			"collection": "orders"
+		},
+		"admin": {
+			"collection": "admin"
 		}
 	},
 	"db": {
