@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import UserModel, { userDefinition, comparePasswords, createUser } from "../../models/User";
 import config from "../../config/config";
-import { generate } from "shortid";
 const usersRouter = Router();
 
 usersRouter.get("/", async (req: Request, res: Response) => {

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
-var router_1 = require("./router");
+var router_1 = __importDefault(require("./router"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var config_1 = __importDefault(require("../config/config"));
 var child_process_1 = require("child_process");
@@ -20,7 +20,7 @@ mongoose_1.default
     .catch(function () { return console.log("Failed connecting to " + DB_URL); });
 server.use(body_parser_1.default.urlencoded({ extended: true }));
 server.use(body_parser_1.default.json());
-server.use(router_1.router);
+server.use(router_1.default);
 server.listen(PORT, function () {
     console.log("Server running on port " + PORT);
 });

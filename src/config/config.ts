@@ -6,6 +6,7 @@ import { execSync } from "child_process";
 export interface Collections {
 	users: SchemaOptions;
 	products: SchemaOptions;
+	orders: SchemaOptions;
 }
 export interface Config {
 	collections: Collections;

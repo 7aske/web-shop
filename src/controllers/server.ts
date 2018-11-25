@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { router } from "./router";
+import router from "./router";
 import mongoose from "mongoose";
 import config from "../config/config";
 import { exec } from "child_process";
