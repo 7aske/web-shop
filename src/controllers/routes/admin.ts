@@ -1,8 +1,9 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import Admin, { adminDefinition } from "../../models/Admin";
 import { comparePasswords } from "../../models/User";
 import * as jwt from "jsonwebtoken";
 import config from "../../config/config";
+import getProducts from "../middleware/getProducts";
 import Product, { productSchema } from "../../models/Product";
 
 const adminRouter = Router();
@@ -11,16 +12,14 @@ adminRouter.get("/", (req: Request, res: Response) => {
 	res.redirect("/admin/login");
 });
 
-adminRouter.get("/dashboard", async (req: Request, res: Response) => {
-	const user = req.user;
-	if (user) {
-		const products = await Product.find({}).exec();
-
+adminRouter.get("/dashboard", getProducts, async (req: Request, res: Response) => {
+	if (req.user) {
 		res.render("adminDashboard.handlebars", {
 			title: "Admin Dashboard",
 			payload: {
-				user: user,
-				products: products
+				user: req.user,
+				products: req.products,
+				errors: req.errors
 			}
 		});
 	} else {

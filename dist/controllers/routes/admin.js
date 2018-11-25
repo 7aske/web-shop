@@ -51,34 +51,27 @@ var Admin_1 = __importDefault(require("../../models/Admin"));
 var User_1 = require("../../models/User");
 var jwt = __importStar(require("jsonwebtoken"));
 var config_1 = __importDefault(require("../../config/config"));
-var Product_1 = __importDefault(require("../../models/Product"));
+var getProducts_1 = __importDefault(require("../middleware/getProducts"));
 var adminRouter = express_1.Router();
 adminRouter.get("/", function (req, res) {
     res.redirect("/admin/login");
 });
-adminRouter.get("/dashboard", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, products;
+adminRouter.get("/dashboard", getProducts_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                user = req.user;
-                if (!user) return [3 /*break*/, 2];
-                return [4 /*yield*/, Product_1.default.find({}).exec()];
-            case 1:
-                products = _a.sent();
-                res.render("adminDashboard.handlebars", {
-                    title: "Admin Dashboard",
-                    payload: {
-                        user: user,
-                        products: products
-                    }
-                });
-                return [3 /*break*/, 3];
-            case 2:
-                res.status(403).send({ message: "Unauthorized." });
-                _a.label = 3;
-            case 3: return [2 /*return*/];
+        if (req.user) {
+            res.render("adminDashboard.handlebars", {
+                title: "Admin Dashboard",
+                payload: {
+                    user: req.user,
+                    products: req.products,
+                    errors: req.errors
+                }
+            });
         }
+        else {
+            res.status(403).send({ message: "Unauthorized." });
+        }
+        return [2 /*return*/];
     });
 }); });
 adminRouter.get("/login", function (req, res) {

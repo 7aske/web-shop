@@ -49,30 +49,62 @@ var productsRouter = express_1.Router();
 productsRouter.get("/", function (req, res) {
     res.send("Hello Products");
 });
-productsRouter.post("/", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var product, newProduct;
+productsRouter.post("/", function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+    var product, newProduct, err_1, errors;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 product = {
                     name: req.body.name,
-                    brand: req.body.brand
+                    brand: req.body.brand,
+                    price: parseInt(req.body.price),
+                    quantity: parseInt(req.body.quantity)
                 };
-                return [4 /*yield*/, Product_1.createProduct(new Product_1.default(product))];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, Product_1.createProduct(new Product_1.default(product))];
+            case 2:
                 newProduct = _a.sent();
-                if (newProduct) {
-                    res.redirect("/admin/dashboard");
-                }
-                else {
-                    res.status(500).send({ error: "Something went wrong" });
-                }
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _a.sent();
+                errors = Object.keys(err_1.errors).map(function (error) { return (error = err_1.errors[error]["message"]); });
+                req.errors = errors;
+                return [3 /*break*/, 4];
+            case 4:
+                next();
                 return [2 /*return*/];
         }
     });
-}); });
-productsRouter.get("/:pid", function (req, res) {
-    var pid = req.params.pid;
-    res.send("Hello Products " + pid);
+}); }, function (req, res) {
+    res.redirect("/admin/dashboard");
+    // res.render("adminDashboard.handlebars", {
+    // 	title: "Admin Dashboard",
+    // 	payload: {
+    // 		user: req.user,
+    // 		products: req.products,
+    // 		errors: req.errors
+    // 	}
+    // });
 });
+productsRouter.post("/:pid", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var newProduct, product;
+    return __generator(this, function (_a) {
+        newProduct = {
+            name: req.body.name,
+            brand: req.body.brand,
+            price: parseInt(req.body.price),
+            quantity: parseInt(req.body.quantity)
+        };
+        product = Product_1.default.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
+        if (product) {
+            res.redirect("/admin/dashboard");
+        }
+        else {
+            res.redirect("/admin/dashboard");
+        }
+        return [2 /*return*/];
+    });
+}); });
 exports.default = productsRouter;

@@ -37,30 +37,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../config/config"));
-var shortid_1 = require("shortid");
-var productDefinition = {
-    pid: { type: String, default: shortid_1.generate },
-    name: { type: String, required: true },
-    brand: { type: String, required: true },
-    quantity: { type: Number, default: 0 },
-    price: { type: Number, default: 0 }
-};
-exports.productSchema = new mongoose_1.default.Schema(productDefinition, config_1.default.collections.products);
-var ProductModel = mongoose_1.default.model("Product", exports.productSchema);
-exports.default = ProductModel;
-function createProduct(product) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    product.pid = shortid_1.generate();
-                    return [4 /*yield*/, product.save()];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
+var Product_1 = __importDefault(require("../../models/Product"));
+exports.default = (function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+    var products;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!req.user) return [3 /*break*/, 2];
+                return [4 /*yield*/, Product_1.default.find({}).exec()];
+            case 1:
+                products = _a.sent();
+                req.products = products;
+                return [3 /*break*/, 3];
+            case 2:
+                req.products = [];
+                _a.label = 3;
+            case 3:
+                next();
+                return [2 /*return*/];
+        }
     });
-}
-exports.createProduct = createProduct;
+}); });
