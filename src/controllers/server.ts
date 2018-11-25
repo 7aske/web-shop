@@ -1,11 +1,13 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import router from "./router";
 import config from "../config/config";
 import { exec } from "child_process";
 import { join } from "path";
+import checkCookie from "./middleware/checkCookie";
 
 mongoose.Promise = global.Promise;
 
@@ -30,8 +32,10 @@ server.set("views", join(process.cwd(), "dist/views/layouts"));
 server.engine("handlebars", exphbs({ defaultLayout: "main", layoutsDir: server.get("views") }));
 server.set("view engine", "handlebars");
 
+server.use(cookieParser());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
+server.use(checkCookie);
 server.use(router);
 
 server.listen(PORT, () => {

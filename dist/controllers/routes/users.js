@@ -64,13 +64,12 @@ usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 
     });
 }); });
 usersRouter.get("/dashboard", function (req, res) {
-    var token = req.body.token;
-    if (jwt.verify(token, config_1.default.hash.salt)) {
-        var decoded = jwt.decode(token);
-        res.status(200).send(decoded);
+    var user = req.user;
+    if (user) {
+        res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: user } });
     }
     else {
-        res.status(403).send({ error: "Auth failed" });
+        res.status(403).send({ error: "Unauthorized." });
     }
 });
 // usersRouter.get("/:uid", (req: Request, res: Response) => {
@@ -81,7 +80,7 @@ usersRouter.get("/register", function (req, res) {
     res.render("register.handlebars");
 });
 usersRouter.post("/register", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, check, newUser;
+    var user, inputError, key, check, newUser;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -92,6 +91,13 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
                     email: req.body.email,
                     password: req.body.password
                 };
+                inputError = false;
+                for (key in user) {
+                    if (user[key] == "" || user[key] == undefined) {
+                        inputError = true;
+                    }
+                }
+                if (!!inputError) return [3 /*break*/, 5];
                 return [4 /*yield*/, User_1.default.find({ $or: [{ username: user.username }, { email: user.email }] }).exec()];
             case 1:
                 check = _a.sent();
@@ -99,18 +105,27 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
                 return [4 /*yield*/, User_1.createUser(new User_1.default(user))];
             case 2:
                 newUser = _a.sent();
-                if (newUser)
-                    res.status(201).send(newUser);
-                else
+                if (newUser) {
+                    res.render("login.handlebars");
+                }
+                else {
                     res.status(500).send({ error: "Something went wrong" });
+                }
                 return [3 /*break*/, 4];
             case 3:
                 res.status(401).send({ error: "Username/e-mail taken." });
                 _a.label = 4;
-            case 4: return [2 /*return*/];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                res.render("register.handlebars");
+                _a.label = 6;
+            case 6: return [2 /*return*/];
         }
     });
 }); });
+usersRouter.get("/login", function (req, res) {
+    res.render("login.handlebars");
+});
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var user, foundUser, token;
     return __generator(this, function (_a) {
@@ -128,12 +143,13 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                         email: user.email
                     };
                     if (User_1.comparePasswords(user.password, req.body.password)) {
-                        token = jwt.sign({
-                            user: foundUser
-                        }, config_1.default.hash.salt, {
+                        token = jwt.sign(foundUser, config_1.default.hash.salt, {
                             expiresIn: "1 hour"
                         });
-                        res.status(200).send({ OK: 200, token: token });
+                        res.setHeader("Set-Cookie", "user=" + token + "; Path=/;");
+                        //res.cookie("token", token);
+                        //res.status(200).send({ OK: 200, token: token });
+                        res.redirect("/users/dashboard");
                     }
                     else {
                         res.status(401).send({ error: "Wrong password." });
@@ -146,4 +162,8 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
         }
     });
 }); });
+usersRouter.get("/logout", function (req, res) {
+    res.clearCookie("user");
+    res.redirect("/users/login");
+});
 exports.default = usersRouter;

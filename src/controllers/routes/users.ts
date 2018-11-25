@@ -10,12 +10,12 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 });
 
 usersRouter.get("/dashboard", (req: Request, res: Response) => {
-	const token = req.body.token;
-	if (jwt.verify(token, config.hash.salt)) {
-		const decoded = jwt.decode(token);
-		res.status(200).send(decoded);
+	const user = req.user;
+
+	if (user) {
+		res.render("dashboard.handlebars", { title: "Dashboard", payload: { user } });
 	} else {
-		res.status(403).send({ error: "Auth failed" });
+		res.status(403).send({ error: "Unauthorized." });
 	}
 });
 
@@ -36,14 +36,31 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 		email: req.body.email,
 		password: req.body.password
 	};
-	const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
-	if (check.length == 0) {
-		const newUser = await createUser(new UserModel(user));
-		if (newUser) res.status(201).send(newUser);
-		else res.status(500).send({ error: "Something went wrong" });
-	} else {
-		res.status(401).send({ error: "Username/e-mail taken." });
+	let inputError = false;
+	for (let key in user) {
+		if (user[key] == "" || user[key] == undefined) {
+			inputError = true;
+		}
 	}
+	if (!inputError) {
+		const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
+		if (check.length == 0) {
+			const newUser = await createUser(new UserModel(user));
+			if (newUser) {
+				res.render("login.handlebars");
+			} else {
+				res.status(500).send({ error: "Something went wrong" });
+			}
+		} else {
+			res.status(401).send({ error: "Username/e-mail taken." });
+		}
+	} else {
+		res.render("register.handlebars");
+	}
+});
+
+usersRouter.get("/login", (req: Request, res: Response) => {
+	res.render("login.handlebars");
 });
 
 usersRouter.post("/login", async (req: Request, res: Response) => {
@@ -60,22 +77,24 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 		};
 
 		if (comparePasswords(user.password, req.body.password)) {
-			const token = jwt.sign(
-				{
-					user: foundUser
-				},
-				config.hash.salt,
-				{
-					expiresIn: "1 hour"
-				}
-			);
-			res.status(200).send({ OK: 200, token: token });
+			const token = jwt.sign(foundUser, config.hash.salt, {
+				expiresIn: "1 hour"
+			});
+			res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
+			//res.cookie("token", token);
+			//res.status(200).send({ OK: 200, token: token });
+			res.redirect("/users/dashboard");
 		} else {
 			res.status(401).send({ error: "Wrong password." });
 		}
 	} else {
 		res.status(401).send({ error: "User not found." });
 	}
+});
+
+usersRouter.get("/logout", (req: Request, res: Response) => {
+	res.clearCookie("user");
+	res.redirect("/users/login");
 });
 
 export default usersRouter;

@@ -12,6 +12,7 @@ export interface userDefinition {
 	lastName: string;
 	password?: string;
 	orders?: orderDefinition[];
+	[key: string]: string | orderDefinition[] | undefined;
 }
 
 const userTemplate: mongoose.SchemaDefinition = {
