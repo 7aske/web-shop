@@ -11,9 +11,9 @@ var config_1 = __importDefault(require("../config/config"));
 var child_process_1 = require("child_process");
 mongoose_1.default.Promise = global.Promise;
 var PORT = config_1.default.serverPort;
-var DB_URL = config_1.default.databaseUrl;
+var DB_URL = config_1.default.db.url;
 var server = express_1.default();
-var mongod = child_process_1.exec("mongod --config " + config_1.default.mongodConfPath);
+var mongod = child_process_1.exec("mongod --config " + config_1.default.mongod.conf);
 mongoose_1.default
     .connect(DB_URL, { useNewUrlParser: true })
     .then(function () { return console.log("Conected to " + DB_URL); })

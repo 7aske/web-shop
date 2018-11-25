@@ -7,10 +7,14 @@
 			"collection": "products"
 		}
 	},
-	"databaseUrl": "mongodb://127.0.0.1:27017/db",
-	"databasePath": "",
-	"mongodPath": "",
-	"mongodConfPath": "",
+	"db": {
+		"url": "mongodb://127.0.0.1:27017/db",
+		"path": ""
+	},
+	"mongod": {
+		"path": "",
+		"conf": ""
+	},
 	"serverPort": 3000,
 	"hash": {
 		"salt": "saltystring",

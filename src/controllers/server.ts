@@ -8,11 +8,11 @@ import { exec } from "child_process";
 mongoose.Promise = global.Promise;
 
 const PORT = config.serverPort;
-const DB_URL = config.databaseUrl;
+const DB_URL = config.db.url;
 
 const server = express();
 
-const mongod = exec(`mongod --config ${config.mongodConfPath}`);
+const mongod = exec(`mongod --config ${config.mongod.conf}`);
 
 mongoose
 	.connect(
