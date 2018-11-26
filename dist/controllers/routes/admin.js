@@ -62,6 +62,7 @@ adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, functio
         if (req.user) {
             res.render("adminDashboard.handlebars", {
                 title: "Admin Dashboard",
+                admin: true,
                 payload: {
                     user: req.user,
                     users: req.users,
