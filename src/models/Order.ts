@@ -15,7 +15,7 @@ const orderDefinition: mongoose.SchemaDefinition = {
 	products: { type: [productSchema], default: [] }
 };
 
-export const orderSchema = new mongoose.Schema(orderDefinition, config.collections.products);
+export const orderSchema = new mongoose.Schema(orderDefinition, { collection: config.collections.products });
 
 const OrderModel = mongoose.model("Order", orderSchema);
 

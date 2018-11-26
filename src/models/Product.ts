@@ -8,16 +8,18 @@ export interface productDefinition {
 	name: string;
 	quantity?: number;
 	price?: number;
+	category?: string;
 }
 const productDefinition: mongoose.SchemaDefinition = {
 	pid: { type: String, default: generate },
 	name: { type: String, required: true },
 	brand: { type: String, required: true },
 	quantity: { type: Number, default: 0 },
-	price: { type: Number, default: 0 }
+	price: { type: Number, default: 0 },
+	category: { type: String, required: false }
 };
 
-export const productSchema = new mongoose.Schema(productDefinition, config.collections.products);
+export const productSchema = new mongoose.Schema(productDefinition, { collection: config.collections.products });
 
 const ProductModel = mongoose.model("Product", productSchema);
 

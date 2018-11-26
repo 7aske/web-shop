@@ -13,7 +13,7 @@ const adminDefinition: mongoose.SchemaDefinition = {
 	email: { type: String }
 };
 
-export const adminSchema = new mongoose.Schema(adminDefinition, config.collections.admin);
+export const adminSchema = new mongoose.Schema(adminDefinition, { collection: config.collections.admin });
 
 const AdminModel = mongoose.model("Admin", adminSchema);
 

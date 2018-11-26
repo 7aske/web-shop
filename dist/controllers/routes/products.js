@@ -49,13 +49,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var Product_1 = __importStar(require("../../models/Product"));
 var checkCookie_1 = __importDefault(require("../middleware/checkCookie"));
+var config_1 = __importDefault(require("../../config/config"));
 var productsRouter = express_1.Router();
 productsRouter.get("/query", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var products;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.params);
+                console.log(req.query);
                 if (!req.user) return [3 /*break*/, 2];
                 return [4 /*yield*/, Product_1.default.find({}).exec()];
             case 1:
@@ -70,15 +71,17 @@ productsRouter.get("/query", checkCookie_1.default, function (req, res) { return
     });
 }); });
 productsRouter.post("/", function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-    var product, newProduct, err_1, errors;
+    var category, product, newProduct, err_1, errors;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
                 product = {
                     name: req.body.name,
                     brand: req.body.brand,
                     price: parseInt(req.body.price),
-                    quantity: parseInt(req.body.quantity)
+                    quantity: parseInt(req.body.quantity),
+                    category: category
                 };
                 _a.label = 1;
             case 1:
@@ -109,13 +112,15 @@ productsRouter.post("/", function (req, res, next) { return __awaiter(_this, voi
     // });
 });
 productsRouter.post("/:pid", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var newProduct, product;
+    var category, newProduct, product;
     return __generator(this, function (_a) {
+        category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
         newProduct = {
             name: req.body.name,
             brand: req.body.brand,
             price: parseInt(req.body.price),
-            quantity: parseInt(req.body.quantity)
+            quantity: parseInt(req.body.quantity),
+            category: category
         };
         product = Product_1.default.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
         if (product) {

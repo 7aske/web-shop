@@ -38,6 +38,16 @@
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="name">Categ.</span>
+                    </div>
+                    <select class="custom-select" id="category" name="category">
+                        {{#each payload.categories}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
                         <span class="input-group-text" style="width:5em;" id="quantity">Qnty.</span>
                     </div>
                     <input type="text" name="quantity" class="form-control" aria-label="Sizing example input"
@@ -58,8 +68,8 @@
             <ul class="list-group" id="productList">
                 {{#each payload.products}}
                 <li class="list-group-item list-group-item-action" style="cursor:pointer" data-pid="{{this.pid}}"
-                    data-name="{{this.name}}" data-brand="{{this.brand}}" data-quantity="{{this.quantity}}" data-price="{{this.price}}"><span
-                        class=" font-weight-bold">{{this.brand}}</span>
+                    data-name="{{this.name}}" data-brand="{{this.brand}}" data-quantity="{{this.quantity}}" data-price="{{this.price}}"
+                    data-category="{{this.category}}"><span class=" font-weight-bold">{{this.brand}}</span>
                     -
                     {{this.name}}</li>
                 {{/each}}

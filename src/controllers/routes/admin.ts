@@ -22,7 +22,8 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 				user: req.user,
 				users: req.users,
 				products: req.products,
-				errors: req.errors
+				errors: req.errors,
+				categories: config.categories
 			}
 		});
 	} else {

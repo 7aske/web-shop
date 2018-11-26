@@ -11,6 +11,6 @@ var orderDefinition = {
     oid: { type: String, default: shortid_1.generate },
     products: { type: [Product_1.productSchema], default: [] }
 };
-exports.orderSchema = new mongoose_1.default.Schema(orderDefinition, config_1.default.collections.products);
+exports.orderSchema = new mongoose_1.default.Schema(orderDefinition, { collection: config_1.default.collections.products });
 var OrderModel = mongoose_1.default.model("Order", exports.orderSchema);
 exports.default = OrderModel;

@@ -25,7 +25,7 @@ const userTemplate: mongoose.SchemaDefinition = {
 	orders: { type: [orderSchema], default: [] }
 };
 
-export const userSchema = new mongoose.Schema(userTemplate, config.collections.users);
+export const userSchema = new mongoose.Schema(userTemplate, { collection: config.collections.users });
 
 const UserModel = mongoose.model("User", userSchema);
 

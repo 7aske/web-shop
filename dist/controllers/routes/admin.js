@@ -67,7 +67,8 @@ adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, functio
                     user: req.user,
                     users: req.users,
                     products: req.products,
-                    errors: req.errors
+                    errors: req.errors,
+                    categories: config_1.default.categories
                 }
             });
         }

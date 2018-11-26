@@ -10,6 +10,6 @@ var adminDefinition = {
     password: { type: String, required: true },
     email: { type: String }
 };
-exports.adminSchema = new mongoose_1.default.Schema(adminDefinition, config_1.default.collections.admin);
+exports.adminSchema = new mongoose_1.default.Schema(adminDefinition, { collection: config_1.default.collections.admin });
 var AdminModel = mongoose_1.default.model("Admin", exports.adminSchema);
 exports.default = AdminModel;

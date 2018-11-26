@@ -1,6 +1,26 @@
 "use strict";
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 var productForm = document.querySelector("#productForm");
-var productInputs = productForm.getElementsByTagName("input");
+var productInputs = __spread(productForm.getElementsByTagName("input"), productForm.getElementsByTagName("select"));
 var productSubmit = document.querySelector('#productForm [type="submit"]');
 var productCancel = document.querySelector('#productForm [type="reset"]');
 var productList = document.querySelectorAll("#productList li");
@@ -15,7 +35,6 @@ productList.forEach(function (li) {
 });
 var userForm = document.querySelector("#userForm");
 var userInputs = userForm.getElementsByTagName("input");
-console.log(userInputs);
 var userSubmit = document.querySelector('#userForm [type="submit"]');
 var userCancel = document.querySelector('#userForm [type="reset"]');
 var userList = document.querySelectorAll("#userList li");
@@ -50,13 +69,20 @@ function handleProductClick(target) {
         brand: target.getAttribute("data-brand"),
         pid: target.getAttribute("data-pid"),
         price: parseInt(target.getAttribute("data-price")),
-        quantity: parseInt(target.getAttribute("data-quantity"))
+        quantity: parseInt(target.getAttribute("data-quantity")),
+        category: target.getAttribute("data-category")
     };
-    productInputs.namedItem("name").value = product.name;
-    productInputs.namedItem("brand").value = product.brand;
-    productInputs.namedItem("quantity").value = product.quantity.toString();
-    productInputs.namedItem("pid").value = product.pid;
-    productInputs.namedItem("price").value = product.price.toString();
+    productInputs.find(function (e) { return e.name == "pid"; }).value = product.pid;
+    productInputs.find(function (e) { return e.name == "brand"; }).value = product.brand;
+    productInputs.find(function (e) { return e.name == "name"; }).value = product.name;
+    productInputs.find(function (e) { return e.name == "category"; }).value = product.category;
+    productInputs.find(function (e) { return e.name == "quantity"; }).value = product.quantity.toString();
+    productInputs.find(function (e) { return e.name == "price"; }).value = product.price.toString();
+    // productInputs.namedItem("name").value = product.name;
+    // productInputs.namedItem("brand").value = product.brand;
+    // productInputs.namedItem("quantity").value = product.quantity.toString();
+    // productInputs.namedItem("pid").value = product.pid;
+    // productInputs.namedItem("price").value = product.price.toString();
     productForm.setAttribute("action", "/products/" + product.pid);
     productSubmit.innerHTML = "Update";
 }

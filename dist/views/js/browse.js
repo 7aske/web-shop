@@ -34,47 +34,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
-var crypto_1 = require("crypto");
-var config_1 = __importDefault(require("../config/config"));
-var shortid_1 = require("shortid");
-var Order_1 = require("./Order");
-var userTemplate = {
-    uid: { type: String, default: shortid_1.generate },
-    username: { type: String, required: true },
-    email: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    password: { type: String, required: true },
-    orders: { type: [Order_1.orderSchema], default: [] }
-};
-exports.userSchema = new mongoose_1.default.Schema(userTemplate, { collection: config_1.default.collections.users });
-var UserModel = mongoose_1.default.model("User", exports.userSchema);
-exports.default = UserModel;
-function createUser(user) {
+var form = document.querySelector("#queryForm");
+var inputs = form.querySelectorAll("input, select");
+var url = new URL(location.host + "/products/query");
+inputs[0].addEventListener("change", function () { return queryProducts(); });
+inputs[1].addEventListener("input", function () { return queryProducts(); });
+function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {
+        var query, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    user.uid = shortid_1.generate();
-                    user.password = crypto_1.createHmac("sha256", config_1.default.hash.salt)
-                        .update(user.password)
-                        .digest("hex");
-                    return [4 /*yield*/, user.save()];
-                case 1: return [2 /*return*/, _a.sent()];
+                    query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
+                    url.search = query;
+                    return [4 /*yield*/, fetch("http://" + url.href)];
+                case 1:
+                    response = _a.sent();
+                    console.log(response);
+                    return [2 /*return*/];
             }
         });
     });
 }
-exports.createUser = createUser;
-function comparePasswords(hashed, notHashed) {
-    return (hashed ==
-        crypto_1.createHmac("sha256", config_1.default.hash.salt)
-            .update(notHashed)
-            .digest("hex"));
-}
-exports.comparePasswords = comparePasswords;

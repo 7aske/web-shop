@@ -4,13 +4,14 @@ import { join } from "path";
 import { execSync } from "child_process";
 
 export interface Collections {
-	users?: SchemaOptions;
-	products?: SchemaOptions;
-	orders?: SchemaOptions;
-	admin?: SchemaOptions;
+	users?: string;
+	products?: string;
+	orders?: string;
+	admin?: string;
 }
 export interface Config {
 	collections: Collections;
+	categories: string[];
 	db: { url: string; path: string };
 	mongod: { path: string; conf: string };
 	serverPort: number;

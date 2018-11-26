@@ -1,18 +1,11 @@
 {
 	"collections": {
-		"users": {
-			"collection": "users"
-		},
-		"products": {
-			"collection": "products"
-		},
-		"orders": {
-			"collection": "orders"
-		},
-		"admin": {
-			"collection": "admin"
-		}
+		"users": "users",
+		"products": "products",
+		"orders": "orders",
+		"admin": "admin"
 	},
+	"categories": ["none", "food", "clothing", "electronics"],
 	"db": {
 		"url": "mongodb://127.0.0.1:27017/db",
 		"path": ""

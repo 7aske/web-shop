@@ -1,10 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import Product, { productDefinition, createProduct } from "../../models/Product";
 import checkCookie from "../middleware/checkCookie";
+import config from "../../config/config";
 const productsRouter = Router();
 
 productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
-	console.log(req.params);
+	console.log(req.query);
 
 	if (req.user) {
 		const products = await Product.find({}).exec();
@@ -17,11 +18,13 @@ productsRouter.get("/query", checkCookie, async (req: Request, res: Response) =>
 productsRouter.post(
 	"/",
 	async (req: Request, res: Response, next: NextFunction) => {
+		const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 		const product: productDefinition = {
 			name: req.body.name,
 			brand: req.body.brand,
 			price: parseInt(req.body.price),
-			quantity: parseInt(req.body.quantity)
+			quantity: parseInt(req.body.quantity),
+			category: category
 		};
 		try {
 			const newProduct = await createProduct(new Product(product));
@@ -46,11 +49,13 @@ productsRouter.post(
 );
 
 productsRouter.post("/:pid", async (req: Request, res: Response) => {
+	const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 	const newProduct: productDefinition = {
 		name: req.body.name,
 		brand: req.body.brand,
 		price: parseInt(req.body.price),
-		quantity: parseInt(req.body.quantity)
+		quantity: parseInt(req.body.quantity),
+		category: category
 	};
 	const product = Product.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
 	if (product) {

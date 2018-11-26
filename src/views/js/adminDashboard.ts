@@ -4,6 +4,7 @@ interface Product {
 	brand: string;
 	quantity?: number;
 	price?: number;
+	category?: string;
 }
 
 interface User {
@@ -15,7 +16,7 @@ interface User {
 }
 
 const productForm = document.querySelector("#productForm");
-const productInputs = productForm.getElementsByTagName("input");
+const productInputs = [...productForm.getElementsByTagName("input"), ...productForm.getElementsByTagName("select")];
 const productSubmit = document.querySelector('#productForm [type="submit"]');
 const productCancel = document.querySelector('#productForm [type="reset"]');
 const productList = document.querySelectorAll("#productList li");
@@ -30,8 +31,6 @@ productList.forEach(li => {
 });
 const userForm = document.querySelector("#userForm");
 const userInputs = userForm.getElementsByTagName("input");
-console.log(userInputs);
-
 const userSubmit = document.querySelector('#userForm [type="submit"]');
 const userCancel = document.querySelector('#userForm [type="reset"]');
 const userList = document.querySelectorAll("#userList li");
@@ -66,13 +65,21 @@ function handleProductClick(target: Element): void {
 		brand: target.getAttribute("data-brand"),
 		pid: target.getAttribute("data-pid"),
 		price: parseInt(target.getAttribute("data-price")),
-		quantity: parseInt(target.getAttribute("data-quantity"))
+		quantity: parseInt(target.getAttribute("data-quantity")),
+		category: target.getAttribute("data-category")
 	};
-	productInputs.namedItem("name").value = product.name;
-	productInputs.namedItem("brand").value = product.brand;
-	productInputs.namedItem("quantity").value = product.quantity.toString();
-	productInputs.namedItem("pid").value = product.pid;
-	productInputs.namedItem("price").value = product.price.toString();
+	productInputs.find(e => e.name == "pid").value = product.pid;
+	productInputs.find(e => e.name == "brand").value = product.brand;
+	productInputs.find(e => e.name == "name").value = product.name;
+	productInputs.find(e => e.name == "category").value = product.category;
+	productInputs.find(e => e.name == "quantity").value = product.quantity.toString();
+	productInputs.find(e => e.name == "price").value = product.price.toString();
+
+	// productInputs.namedItem("name").value = product.name;
+	// productInputs.namedItem("brand").value = product.brand;
+	// productInputs.namedItem("quantity").value = product.quantity.toString();
+	// productInputs.namedItem("pid").value = product.pid;
+	// productInputs.namedItem("price").value = product.price.toString();
 	productForm.setAttribute("action", "/products/" + product.pid);
 	productSubmit.innerHTML = "Update";
 }
