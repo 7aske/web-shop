@@ -68,14 +68,61 @@
     </div>
 </section>
 <section id="content2">
-    <ul class="list-group" id="usersList">
-        {{#each payload.users}}
-        <li class="list-group-item list-group-item-action" style="cursor:pointer" data-uid="{{this.pid}}" data-username="{{this.username}}"
-            data-email="{{this.email}}" data-firstName="{{this.fristName}}" data-lastName="{{this.lastName}}"><span
-                class=" font-weight-bold">{{this.username}}</span>
-            -
-            {{this.firstName}} {{this.lastName}} - {{this.email}} - {{this.uid}}</li>
-        {{/each}}
-    </ul>
+    <dir class="row p-3">
+        <div class="col-md-6">
+            <form method="post" action="/users" id="userForm">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:6em;" id="pid">User ID</span>
+                    </div>
+                    <input type="text" name="uid" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="uid" readonly>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:6em;" id="fristName">First Name</span>
+                    </div>
+                    <input type="text" name="firstName" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="firstName">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:6em;" id="lastName">Last Name</span>
+                    </div>
+                    <input type="text" name="lastName" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="lastName">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:6em;" id="username">Username</span>
+                    </div>
+                    <input type="text" name="username" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="username">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:6em;" id="email">E-Mail</span>
+                    </div>
+                    <input type="text" name="email" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="email">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="reset" class="btn btn-danger">Cancel</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group" id="userList">
+                {{#each payload.users}}
+                <li class="list-group-item list-group-item-action" style="cursor:pointer" data-uid="{{this.uid}}"
+                    data-username="{{this.username}}" data-email="{{this.email}}" data-firstName="{{this.firstName}}"
+                    data-lastName="{{this.lastName}}"><span class=" font-weight-bold">{{this.username}}</span>
+                    -
+                    {{this.firstName}} {{this.lastName}} - {{this.email}} - {{this.uid}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </dir>
+
+
 </section>
 <script src="../js/adminDashboard.js"></script>

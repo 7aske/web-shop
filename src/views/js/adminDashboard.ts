@@ -6,26 +6,61 @@ interface Product {
 	price?: number;
 }
 
+interface User {
+	uid: string;
+	username: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+}
+
 const productForm = document.querySelector("#productForm");
-const inputs = productForm.getElementsByTagName("input");
-const submitButton = document.querySelector('#productForm [type="submit"]');
-const cancelButton = document.querySelector('[type="reset"]');
-cancelButton.addEventListener("click", e => {
-	submitButton.innerHTML = "Add";
+const productInputs = productForm.getElementsByTagName("input");
+const productSubmit = document.querySelector('#productForm [type="submit"]');
+const productCancel = document.querySelector('#productForm [type="reset"]');
+const productList = document.querySelectorAll("#productList li");
+productCancel.addEventListener("click", e => {
+	productSubmit.innerHTML = "Add";
 	productForm.setAttribute("action", "/products");
 });
-const productList = document.querySelectorAll("#productList li");
 productList.forEach(li => {
-	li.addEventListener(
-		"click",
-		e => {
-			handleListClick(li);
-		},
-		false
-	);
+	li.addEventListener("click", e => {
+		handleProductClick(li);
+	});
 });
+const userForm = document.querySelector("#userForm");
+const userInputs = userForm.getElementsByTagName("input");
+console.log(userInputs);
 
-function handleListClick(target: Element): void {
+const userSubmit = document.querySelector('#userForm [type="submit"]');
+const userCancel = document.querySelector('#userForm [type="reset"]');
+const userList = document.querySelectorAll("#userList li");
+userCancel.addEventListener("click", e => {
+	userCancel.innerHTML = "Add";
+	userForm.setAttribute("action", "/users");
+});
+userList.forEach(li => {
+	li.addEventListener("click", e => {
+		handleUserClick(li);
+	});
+});
+function handleUserClick(target: Element): void {
+	const user: User = {
+		username: target.getAttribute("data-username"),
+		lastName: target.getAttribute("data-lastName"),
+		uid: target.getAttribute("data-uid"),
+		firstName: target.getAttribute("data-firstName"),
+		email: target.getAttribute("data-email")
+	};
+	userInputs.namedItem("username").value = user.username;
+	userInputs.namedItem("lastName").value = user.lastName;
+	userInputs.namedItem("firstName").value = user.firstName;
+	userInputs.namedItem("uid").value = user.uid;
+	userInputs.namedItem("email").value = user.email;
+	userForm.setAttribute("action", "/users/" + user.uid);
+	userSubmit.innerHTML = "Update";
+}
+function handleProductClick(target: Element): void {
 	const product: Product = {
 		name: target.getAttribute("data-name"),
 		brand: target.getAttribute("data-brand"),
@@ -33,11 +68,11 @@ function handleListClick(target: Element): void {
 		price: parseInt(target.getAttribute("data-price")),
 		quantity: parseInt(target.getAttribute("data-quantity"))
 	};
-	inputs.namedItem("name").value = product.name;
-	inputs.namedItem("brand").value = product.brand;
-	inputs.namedItem("quantity").value = product.quantity.toString();
-	inputs.namedItem("pid").value = product.pid;
-	inputs.namedItem("price").value = product.price.toString();
+	productInputs.namedItem("name").value = product.name;
+	productInputs.namedItem("brand").value = product.brand;
+	productInputs.namedItem("quantity").value = product.quantity.toString();
+	productInputs.namedItem("pid").value = product.pid;
+	productInputs.namedItem("price").value = product.price.toString();
 	productForm.setAttribute("action", "/products/" + product.pid);
-	submitButton.innerHTML = "Update";
+	productSubmit.innerHTML = "Update";
 }

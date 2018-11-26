@@ -1,11 +1,12 @@
 import { Router, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import UserModel, { userDefinition, comparePasswords, createUser } from "../../models/User";
+import User, { userDefinition, comparePasswords, createUser } from "../../models/User";
 import config from "../../config/config";
+import checkCookie from "../middleware/checkCookie";
 const usersRouter = Router();
 
 usersRouter.get("/", async (req: Request, res: Response) => {
-	const users = await UserModel.find({}).exec();
+	const users = await User.find({}).exec();
 	res.status(200).send(users);
 });
 
@@ -42,9 +43,10 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 		}
 	}
 	if (!inputError) {
-		const check = await UserModel.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
+		const check = await User.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
+		console.log(check);
 		if (check.length == 0) {
-			const newUser: any = await createUser(new UserModel(user));
+			const newUser: any = await createUser(new User(user));
 			if (newUser) {
 				res.render("login.handlebars");
 			} else {
@@ -63,7 +65,7 @@ usersRouter.get("/login", (req: Request, res: Response) => {
 });
 
 usersRouter.post("/login", async (req: Request, res: Response) => {
-	const user: any = await UserModel.findOne({
+	const user: any = await User.findOne({
 		$or: [{ username: req.body.username }, { email: req.body.username }]
 	}).exec();
 
@@ -96,6 +98,19 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 usersRouter.get("/logout", (req: Request, res: Response) => {
 	res.clearCookie("user");
 	res.redirect("/users/login");
+});
+usersRouter.post("/:uid", checkCookie, async (req: Request, res: Response) => {
+	const user: userDefinition = {
+		uid: req.body.uid,
+		username: req.body.username,
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		email: req.body.email
+	};
+	try {
+		const check = await User.findOneAndUpdate({ uid: req.body.uid }, user).exec();
+	} catch (err) {}
+	res.redirect("/admin/dashboard");
 });
 
 export default usersRouter;

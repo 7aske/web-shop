@@ -1,4 +1,14 @@
 <div class="container">
+    {{#if payload.user}}
+
+    <div class="jumbotron mt-5">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">
+            You are logged in Savo its fine!
+        </p>
+        <hr class="my-4">
+    </div>
+    {{else}}
     <div class="jumbotron mt-5">
         <h1 class="display-4">Hello, world!</h1>
         <p class="lead">
@@ -10,4 +20,6 @@
         <p>Click below and join this awesome shop thing I made.</p>
         <a class="btn btn-primary btn-lg" href="/users/register" role="button">Sign up</a>
     </div>
+    {{/if}}
+
 </div>

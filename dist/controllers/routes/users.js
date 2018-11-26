@@ -50,6 +50,7 @@ var express_1 = require("express");
 var jwt = __importStar(require("jsonwebtoken"));
 var User_1 = __importStar(require("../../models/User"));
 var config_1 = __importDefault(require("../../config/config"));
+var checkCookie_1 = __importDefault(require("../middleware/checkCookie"));
 var usersRouter = express_1.Router();
 usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var users;
@@ -101,6 +102,7 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
                 return [4 /*yield*/, User_1.default.find({ $or: [{ username: user.username }, { email: user.email }] }).exec()];
             case 1:
                 check = _a.sent();
+                console.log(check);
                 if (!(check.length == 0)) return [3 /*break*/, 3];
                 return [4 /*yield*/, User_1.createUser(new User_1.default(user))];
             case 2:
@@ -170,4 +172,32 @@ usersRouter.get("/logout", function (req, res) {
     res.clearCookie("user");
     res.redirect("/users/login");
 });
+usersRouter.post("/:uid", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var user, check, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                user = {
+                    uid: req.body.uid,
+                    username: req.body.username,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email
+                };
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, User_1.default.findOneAndUpdate({ uid: req.body.uid }, user).exec()];
+            case 2:
+                check = _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _a.sent();
+                return [3 /*break*/, 4];
+            case 4:
+                res.redirect("/admin/dashboard");
+                return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = usersRouter;

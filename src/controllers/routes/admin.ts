@@ -30,7 +30,10 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 });
 
 adminRouter.get("/login", (req: Request, res: Response) => {
-	res.render("login.handlebars", { title: "Admin Login" });
+	res.render("login.handlebars", {
+		title: "Admin Login",
+		admin: true
+	});
 });
 
 adminRouter.post("/login", async (req: Request, res: Response) => {
