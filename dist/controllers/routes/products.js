@@ -52,16 +52,19 @@ var checkCookie_1 = __importDefault(require("../middleware/checkCookie"));
 var config_1 = __importDefault(require("../../config/config"));
 var productsRouter = express_1.Router();
 productsRouter.get("/query", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var products;
+    var query, products;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.query);
+                query = new RegExp(req.query.s, "gi");
                 if (!req.user) return [3 /*break*/, 2];
-                return [4 /*yield*/, Product_1.default.find({}).exec()];
+                return [4 /*yield*/, Product_1.default.find({
+                        $and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
+                    }).exec()];
             case 1:
                 products = _a.sent();
-                res.send(products);
+                console.log(products);
+                res.status(200).send({ products: products });
                 return [3 /*break*/, 3];
             case 2:
                 res.status(403).send({ error: "Unauthorized." });
@@ -102,14 +105,6 @@ productsRouter.post("/", function (req, res, next) { return __awaiter(_this, voi
     });
 }); }, function (req, res) {
     res.redirect("/admin/dashboard");
-    // res.render("adminDashboard.handlebars", {
-    // 	title: "Admin Dashboard",
-    // 	payload: {
-    // 		user: req.user,
-    // 		products: req.products,
-    // 		errors: req.errors
-    // 	}
-    // });
 });
 productsRouter.post("/:pid", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var category, newProduct, product;

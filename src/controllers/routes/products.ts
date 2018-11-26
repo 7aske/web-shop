@@ -5,11 +5,14 @@ import config from "../../config/config";
 const productsRouter = Router();
 
 productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
-	console.log(req.query);
-
+	const query = new RegExp(req.query.s, "gi");
 	if (req.user) {
-		const products = await Product.find({}).exec();
-		res.send(products);
+		const products = await Product.find({
+			$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
+		}).exec();
+		console.log(products);
+
+		res.status(200).send({ products: products });
 	} else {
 		res.status(403).send({ error: "Unauthorized." });
 	}
@@ -37,14 +40,6 @@ productsRouter.post(
 	},
 	(req: Request, res: Response) => {
 		res.redirect("/admin/dashboard");
-		// res.render("adminDashboard.handlebars", {
-		// 	title: "Admin Dashboard",
-		// 	payload: {
-		// 		user: req.user,
-		// 		products: req.products,
-		// 		errors: req.errors
-		// 	}
-		// });
 	}
 );
 

@@ -36,21 +36,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var form = document.querySelector("#queryForm");
 var inputs = form.querySelectorAll("input, select");
+var productOutput = document.querySelector("#productList");
 var url = new URL(location.host + "/products/query");
 inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
+function productTemplate(p) {
+    return " <li class=\"list-group-item list-group-item-action d-flex justify-content-around\">\n    <span class=\"font-weight-bold\">" + p.brand + "</span><span>" + p.name + "</span> <span class=\"text-danger\">Quantity: " + p.quantity + "</span>\n    <span class=\"text-danger\">Price: " + p.price + "</span>\n    <small>Category: " + p.category + "</small>\n</li>";
+}
 function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {
-        var query, response;
+        var query, results;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
                     url.search = query;
                     return [4 /*yield*/, fetch("http://" + url.href)];
-                case 1:
-                    response = _a.sent();
-                    console.log(response);
+                case 1: return [4 /*yield*/, (_a.sent()).json()];
+                case 2:
+                    results = _a.sent();
+                    productOutput.innerHTML = "";
+                    console.log(results.products);
+                    results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
                     return [2 /*return*/];
             }
         });
