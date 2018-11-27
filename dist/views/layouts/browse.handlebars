@@ -10,6 +10,10 @@
         margin-top:12px;
         width: 15% !important;
     }
+    .list-group-item div img {
+        margin-top: -5px;
+        height: 100%;
+    }
     .list-group-item div:first-of-type{
         padding-left: 20px;
     }
@@ -33,7 +37,10 @@
                         </select>
                     </div>
                     <div class="input-group col-md-6 col-sm-12">
-                        <input class="form-control" type="text" name="query">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="query">Search</label>
+                        </div>
+                        <input class="form-control" type="text" name="query" placeholder="Search">
                     </div>
                 </div>
             </form>

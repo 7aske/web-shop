@@ -8,6 +8,7 @@ const url = new URL(location.host + "/products/query");
 
 inputs[0].addEventListener("change", () => queryProducts());
 inputs[1].addEventListener("input", () => queryProducts());
+
 function productTemplate(p: Product): string {
 	return `
 	<li class="list-group-item list-group-item-action d-flex justify-content-between">

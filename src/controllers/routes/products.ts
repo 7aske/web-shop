@@ -2,7 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import Product, { productDefinition, createProduct } from "../../models/Product";
 import checkCookie from "../middleware/checkCookie";
 import * as jwt from "jsonwebtoken";
-import { readFileSync } from "fs";
+import { generate } from "shortid";
+import { writeFileSync, mkdirSync, writeFile, existsSync, readFileSync } from "fs";
 import { join } from "path";
 import config from "../../config/config";
 const productsRouter = Router();
@@ -20,8 +21,6 @@ productsRouter.get("/query", checkCookie, async (req: Request, res: Response) =>
 		const products = await Product.find({
 			$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
 		}).exec();
-		console.log(products);
-
 		res.status(200).send({ products: products });
 	} else {
 		res.status(403).send({ error: "Unauthorized." });
@@ -31,8 +30,18 @@ productsRouter.get("/query", checkCookie, async (req: Request, res: Response) =>
 productsRouter.post("/cart/:pid", (req: Request, res: Response) => {});
 
 productsRouter.post("/:pid", upload.single("image"), async (req: Request, res: Response) => {
-	console.log(req.file);
-	//const img = Buffer.from(req.file.buffer.toString());
+	const folderPath = join(config.db.uploads, req.params.pid);
+	const filePath = folderPath + "/thumbnail.png";
+	let imgBuffer: Buffer;
+	let imgString: string;
+	if (req.file) {
+		imgBuffer = req.file.buffer;
+	} else {
+		imgBuffer = readFileSync(config.db.defaultProduct);
+	}
+	imgString = imgBuffer.toString("base64");
+	if (!existsSync(filePath)) mkdirSync(folderPath, { recursive: true });
+	writeFile(filePath, imgBuffer, () => {});
 	const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 	const newProduct: productDefinition = {
 		name: req.body.name,
@@ -40,7 +49,7 @@ productsRouter.post("/:pid", upload.single("image"), async (req: Request, res: R
 		price: parseInt(req.body.price),
 		quantity: parseInt(req.body.quantity),
 		category: category,
-		img: req.file.buffer
+		img: imgString
 	};
 	const product = Product.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
 	if (product) {
@@ -53,20 +62,32 @@ productsRouter.post(
 	"/",
 	upload.single("image"),
 	async (req: Request, res: Response, next: NextFunction) => {
-		//const img = Buffer.from(req.file.buffer.toString());
+		const pid = generate();
+		const folderPath = join(config.db.uploads, pid);
+		const filePath = folderPath + "/thumbnail.png";
+		let imgBuffer: Buffer;
+		let imgString: string;
+		if (req.file) {
+			imgBuffer = req.file.buffer;
+		} else {
+			imgBuffer = readFileSync(config.db.defaultProduct);
+		}
+		imgString = imgBuffer.toString("base64");
+		if (!existsSync(filePath)) mkdirSync(filePath, { recursive: true });
+		writeFile(filePath, imgBuffer, () => {});
 		const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 		const product: productDefinition = {
+			pid: pid,
 			name: req.body.name,
 			brand: req.body.brand,
 			price: parseInt(req.body.price),
 			quantity: parseInt(req.body.quantity),
 			category: category,
-			img: req.file.buffer
+			img: imgString
 		};
 		try {
-			const newProduct = await createProduct(new Product(product));
+			const newProduct = await new Product(product).save();
 		} catch (err) {
-			//TODO: error middelware
 			const errors = Object.keys(err.errors).map(error => (error = err.errors[error]["message"]));
 			req.errors = errors;
 		}

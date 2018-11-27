@@ -8,7 +8,9 @@
 	"categories": ["none", "food", "clothing", "electronics"],
 	"db": {
 		"url": "mongodb://127.0.0.1:27017/db",
-		"path": ""
+		"path": "",
+		"uploads": "",
+		"defaultProduct": ""
 	},
 	"mongod": {
 		"path": "",

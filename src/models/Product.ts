@@ -9,7 +9,7 @@ export interface productDefinition {
 	quantity?: number;
 	price?: number;
 	category?: string;
-	img?: Buffer;
+	img?: string;
 }
 const productDefinition: mongoose.SchemaDefinition = {
 	pid: { type: String, default: generate },
@@ -27,7 +27,7 @@ const ProductModel = mongoose.model("Product", productSchema);
 
 export default ProductModel;
 
-export async function createProduct(product: any) {
+export async function createProduct(product: any): Promise<mongoose.Document> {
 	product.pid = generate();
 	return await product.save();
 }

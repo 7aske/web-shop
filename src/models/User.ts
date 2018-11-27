@@ -31,7 +31,7 @@ const UserModel = mongoose.model("User", userSchema);
 
 export default UserModel;
 
-export async function createUser(user: any): Promise<Document> {
+export async function createUser(user: any): Promise<mongoose.Document> {
 	user.uid = generate();
 	user.password = createHmac("sha256", config.hash.salt)
 		.update(user.password)
