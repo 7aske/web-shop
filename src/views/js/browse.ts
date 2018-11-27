@@ -22,15 +22,31 @@ function productTemplate(p: Product): string {
 		<button class="btn btn-success" data-pid="${p.pid}" onclick="addToCart(this)">Cart</button>
 	</li>`;
 }
+function initOrder() {
+	if (localStorage.getItem("order") == null) {
+		const order: any = { products: [] };
+		localStorage.setItem("order", JSON.stringify(order));
+	}
+}
+
 function addToCart(btn: HTMLButtonElement) {
 	const pid = btn.getAttribute("data-pid");
+	console.log(localStorage.getItem("order"));
+
+	let order = JSON.parse(localStorage.getItem("order"));
+	order.products.push(pid);
+	localStorage.setItem("order", JSON.stringify(order));
 }
 async function queryProducts(): Promise<void> {
 	const query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
 	url.search = query;
-	const results: QueryResponse = await (await fetch("http://" + url.href)).json();
-	productOutput.innerHTML = "";
-	console.log(results.products);
+	let results: QueryResponse;
+	try {
+		results = await (await fetch("http://" + url.href)).json();
+		productOutput.innerHTML = "";
+		console.log(results.products);
 
-	results.products.forEach(p => (productOutput.innerHTML += productTemplate(p)));
+		results.products.forEach(p => (productOutput.innerHTML += productTemplate(p)));
+	} catch (err) {}
 }
+initOrder();

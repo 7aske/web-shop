@@ -15,6 +15,7 @@ adminRouter.get("/", (req: Request, res: Response) => {
 
 adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: Response) => {
 	if (req.user) {
+		//const admin = Admin.find({uid:})
 		res.render("adminDashboard.handlebars", {
 			title: "Admin Dashboard",
 			admin: true,
@@ -55,7 +56,7 @@ adminRouter.post("/login", async (req: Request, res: Response) => {
 				const token = jwt.sign(foundAdmin, config.hash.salt, {
 					expiresIn: "2h"
 				});
-				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
+				res.setHeader("Set-Cookie", `user=${token}; Path=/admin;`);
 				res.redirect("/admin/dashboard");
 			} else {
 				res.status(403).send({ error: "Unauthorized." });

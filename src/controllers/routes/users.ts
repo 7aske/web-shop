@@ -71,14 +71,14 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 
 	if (user) {
 		const foundUser: userDefinition = {
+			pid: user.pid,
 			username: user.username,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			email: user.email
 		};
 		try {
-			const check = comparePasswords(user.password, req.body.password);
-			if (check) {
+			if (comparePasswords(user.password, req.body.password)) {
 				const token = jwt.sign(foundUser, config.hash.salt, {
 					expiresIn: "1d"
 				});

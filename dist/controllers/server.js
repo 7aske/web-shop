@@ -13,6 +13,7 @@ var child_process_1 = require("child_process");
 var path_1 = require("path");
 var morgan_1 = __importDefault(require("morgan"));
 var checkCookie_1 = __importDefault(require("./middleware/checkCookie"));
+var Admin_1 = require("../models/Admin");
 mongoose_1.default.Promise = global.Promise;
 var PORT = config_1.default.serverPort;
 var DB_URL = config_1.default.db.url;
@@ -35,6 +36,7 @@ server.use(router_1.default);
 server.listen(PORT, function () {
     console.log("Server running on port " + PORT);
 });
+Admin_1.initAdmin();
 process.on("exit", function () {
     if (mongod)
         mongod.kill();

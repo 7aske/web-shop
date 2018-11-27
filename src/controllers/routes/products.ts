@@ -23,7 +23,7 @@ productsRouter.get("/query", checkCookie, async (req: Request, res: Response) =>
 		}).exec();
 		res.status(200).send({ products: products });
 	} else {
-		res.status(403).send({ error: "Unauthorized." });
+		res.status(401).send({ error: "Unauthorized." });
 	}
 });
 

@@ -1,13 +1,16 @@
 import { SchemaOptions, Schema } from "mongoose";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
+import { generate } from "shortid";
 import { execSync } from "child_process";
-
+import { createUser } from "../models/User";
+import Admin, { adminDefinition } from "../models/Admin";
 export interface Collections {
 	users?: string;
 	products?: string;
 	orders?: string;
 	admin?: string;
+	collections?: Collections;
 }
 export interface Config {
 	collections: Collections;

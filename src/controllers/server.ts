@@ -8,6 +8,7 @@ import { exec } from "child_process";
 import { join } from "path";
 import morgan from "morgan";
 import checkCookie from "./middleware/checkCookie";
+import { initAdmin } from "../models/Admin";
 
 mongoose.Promise = global.Promise;
 
@@ -42,6 +43,8 @@ server.use(router);
 server.listen(PORT, () => {
 	console.log("Server running on port " + PORT);
 });
+
+initAdmin();
 
 process.on("exit", () => {
 	if (mongod) mongod.kill();

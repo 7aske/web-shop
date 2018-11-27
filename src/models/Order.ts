@@ -6,7 +6,7 @@ import config from "../config/config";
 
 export interface orderDefinition {
 	oid: string;
-	user: userDefinition;
+	user: string;
 	products: productDefinition[];
 }
 

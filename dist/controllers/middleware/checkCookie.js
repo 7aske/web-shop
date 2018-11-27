@@ -19,6 +19,7 @@ exports.default = (function (req, res, next) {
             var check = jwt.verify(token, config_1.default.hash.salt);
             if (check) {
                 var user = jwt.decode(token);
+                console.log(user);
                 req.user = user;
             }
             else {

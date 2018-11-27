@@ -9,6 +9,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
 			const check = jwt.verify(token, config.hash.salt);
 			if (check) {
 				const user = jwt.decode(token);
+				console.log(user);
+
 				req.user = <userDefinition>user;
 			} else {
 				req.user = undefined;

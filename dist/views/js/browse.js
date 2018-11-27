@@ -43,26 +43,44 @@ inputs[1].addEventListener("input", function () { return queryProducts(); });
 function productTemplate(p) {
     return "\n\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t<div class=\"font-weight-bold\">\n\t\t\t" + p.brand + "\n\t\t\t</div><div>" + p.name + "</div>\n\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t</li>";
 }
+function initOrder() {
+    if (localStorage.getItem("order") == null) {
+        var order = { products: [] };
+        localStorage.setItem("order", JSON.stringify(order));
+    }
+}
 function addToCart(btn) {
     var pid = btn.getAttribute("data-pid");
+    console.log(localStorage.getItem("order"));
+    var order = JSON.parse(localStorage.getItem("order"));
+    order.products.push(pid);
+    localStorage.setItem("order", JSON.stringify(order));
 }
 function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {
-        var query, results;
+        var query, results, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
                     url.search = query;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
                     return [4 /*yield*/, fetch("http://" + url.href)];
-                case 1: return [4 /*yield*/, (_a.sent()).json()];
-                case 2:
+                case 2: return [4 /*yield*/, (_a.sent()).json()];
+                case 3:
                     results = _a.sent();
                     productOutput.innerHTML = "";
                     console.log(results.products);
                     results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
-                    return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 4:
+                    err_1 = _a.sent();
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
 }
+initOrder();

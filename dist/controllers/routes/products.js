@@ -64,7 +64,7 @@ productsRouter.get("/query", checkCookie_1.default, function (req, res) { return
                 res.status(200).send({ products: products });
                 return [3 /*break*/, 3];
             case 2:
-                res.status(403).send({ error: "Unauthorized." });
+                res.status(401).send({ error: "Unauthorized." });
                 _a.label = 3;
             case 3: return [2 /*return*/];
         }

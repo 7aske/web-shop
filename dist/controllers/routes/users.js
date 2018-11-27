@@ -129,7 +129,7 @@ usersRouter.get("/login", function (req, res) {
     res.render("login.handlebars");
 });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, foundUser, check, token;
+    var user, foundUser, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, User_1.default.findOne({
@@ -139,14 +139,14 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                 user = _a.sent();
                 if (user) {
                     foundUser = {
+                        pid: user.pid,
                         username: user.username,
                         firstName: user.firstName,
                         lastName: user.lastName,
                         email: user.email
                     };
                     try {
-                        check = User_1.comparePasswords(user.password, req.body.password);
-                        if (check) {
+                        if (User_1.comparePasswords(user.password, req.body.password)) {
                             token = jwt.sign(foundUser, config_1.default.hash.salt, {
                                 expiresIn: "1d"
                             });
