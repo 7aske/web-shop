@@ -1,6 +1,5 @@
 import express from "express";
 import exphbs from "express-handlebars";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import router from "./router";
@@ -35,8 +34,8 @@ server.set("view engine", "handlebars");
 
 server.use(morgan("dev"));
 server.use(cookieParser());
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
 server.use(checkCookie);
 server.use(router);
 

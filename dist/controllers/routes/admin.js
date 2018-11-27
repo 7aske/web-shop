@@ -81,7 +81,10 @@ adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, functio
 adminRouter.get("/login", function (req, res) {
     res.render("login.handlebars", {
         title: "Admin Login",
-        admin: true
+        admin: true,
+        payload: {
+            user: req.user
+        }
     });
 });
 adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {

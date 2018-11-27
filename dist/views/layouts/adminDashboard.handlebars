@@ -14,7 +14,7 @@
     </div>
     <div class="row p-3">
         <div class="col-md-6">
-            <form method="post" action="/products" id="productForm">
+            <form method="post" action="/products" id="productForm" enctype="multipart/form-data">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width:5em;" id="pid">Prod. ID</span>
@@ -38,16 +38,6 @@
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" style="width:5em;" id="name">Categ.</span>
-                    </div>
-                    <select class="custom-select" id="category" name="category">
-                        {{#each payload.categories}}
-                        <option value="{{this}}">{{this}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
                         <span class="input-group-text" style="width:5em;" id="quantity">Qnty.</span>
                     </div>
                     <input type="text" name="quantity" class="form-control" aria-label="Sizing example input"
@@ -59,6 +49,22 @@
                     </div>
                     <input type="text" name="price" class="form-control" aria-label="Sizing example input"
                         aria-describedby="price">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:5em;" id="name">Categ.</span>
+                    </div>
+                    <select class="custom-select" id="category" name="category">
+                        {{#each payload.categories}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                        <label class="custom-file-label text-left" for="image">Choose file</label>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
                 <button type="reset" class="btn btn-danger">Cancel</button>

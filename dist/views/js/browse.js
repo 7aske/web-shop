@@ -41,7 +41,10 @@ var url = new URL(location.host + "/products/query");
 inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
 function productTemplate(p) {
-    return " <li class=\"list-group-item list-group-item-action d-flex justify-content-around\">\n    <span class=\"font-weight-bold\">" + p.brand + "</span><span>" + p.name + "</span> <span class=\"text-danger\">Quantity: " + p.quantity + "</span>\n    <span class=\"text-danger\">Price: " + p.price + "</span>\n    <small>Category: " + p.category + "</small>\n</li>";
+    return "\n\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t<div class=\"font-weight-bold\">\n\t\t\t" + p.brand + "\n\t\t\t</div><div>" + p.name + "</div>\n\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t</li>";
+}
+function addToCart(btn) {
+    var pid = btn.getAttribute("data-pid");
 }
 function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {

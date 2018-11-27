@@ -78,11 +78,6 @@ function handleProductClick(target) {
     productInputs.find(function (e) { return e.name == "category"; }).value = product.category;
     productInputs.find(function (e) { return e.name == "quantity"; }).value = product.quantity.toString();
     productInputs.find(function (e) { return e.name == "price"; }).value = product.price.toString();
-    // productInputs.namedItem("name").value = product.name;
-    // productInputs.namedItem("brand").value = product.brand;
-    // productInputs.namedItem("quantity").value = product.quantity.toString();
-    // productInputs.namedItem("pid").value = product.pid;
-    // productInputs.namedItem("price").value = product.price.toString();
     productForm.setAttribute("action", "/products/" + product.pid);
     productSubmit.innerHTML = "Update";
 }

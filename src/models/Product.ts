@@ -9,6 +9,7 @@ export interface productDefinition {
 	quantity?: number;
 	price?: number;
 	category?: string;
+	img?: Buffer;
 }
 const productDefinition: mongoose.SchemaDefinition = {
 	pid: { type: String, default: generate },
@@ -16,7 +17,8 @@ const productDefinition: mongoose.SchemaDefinition = {
 	brand: { type: String, required: true },
 	quantity: { type: Number, default: 0 },
 	price: { type: Number, default: 0 },
-	category: { type: String, required: false }
+	category: { type: String, required: false },
+	img: { type: String }
 };
 
 export const productSchema = new mongoose.Schema(productDefinition, { collection: config.collections.products });

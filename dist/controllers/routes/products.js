@@ -51,6 +51,8 @@ var Product_1 = __importStar(require("../../models/Product"));
 var checkCookie_1 = __importDefault(require("../middleware/checkCookie"));
 var config_1 = __importDefault(require("../../config/config"));
 var productsRouter = express_1.Router();
+var multer_1 = __importDefault(require("multer"));
+var upload = multer_1.default();
 productsRouter.get("/query", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var query, products;
     return __generator(this, function (_a) {
@@ -73,7 +75,31 @@ productsRouter.get("/query", checkCookie_1.default, function (req, res) { return
         }
     });
 }); });
-productsRouter.post("/", function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+productsRouter.post("/cart/:pid", function (req, res) { });
+productsRouter.post("/:pid", upload.single("image"), function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var category, newProduct, product;
+    return __generator(this, function (_a) {
+        console.log(req.file);
+        category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
+        newProduct = {
+            name: req.body.name,
+            brand: req.body.brand,
+            price: parseInt(req.body.price),
+            quantity: parseInt(req.body.quantity),
+            category: category,
+            img: req.file.buffer
+        };
+        product = Product_1.default.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
+        if (product) {
+            res.redirect("/admin/dashboard");
+        }
+        else {
+            res.redirect("/admin/dashboard");
+        }
+        return [2 /*return*/];
+    });
+}); });
+productsRouter.post("/", upload.single("image"), function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
     var category, product, newProduct, err_1, errors;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -84,7 +110,8 @@ productsRouter.post("/", function (req, res, next) { return __awaiter(_this, voi
                     brand: req.body.brand,
                     price: parseInt(req.body.price),
                     quantity: parseInt(req.body.quantity),
-                    category: category
+                    category: category,
+                    img: req.file.buffer
                 };
                 _a.label = 1;
             case 1:
@@ -106,25 +133,4 @@ productsRouter.post("/", function (req, res, next) { return __awaiter(_this, voi
 }); }, function (req, res) {
     res.redirect("/admin/dashboard");
 });
-productsRouter.post("/:pid", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var category, newProduct, product;
-    return __generator(this, function (_a) {
-        category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
-        newProduct = {
-            name: req.body.name,
-            brand: req.body.brand,
-            price: parseInt(req.body.price),
-            quantity: parseInt(req.body.quantity),
-            category: category
-        };
-        product = Product_1.default.findOneAndUpdate({ pid: req.body.pid }, newProduct).exec();
-        if (product) {
-            res.redirect("/admin/dashboard");
-        }
-        else {
-            res.redirect("/admin/dashboard");
-        }
-        return [2 /*return*/];
-    });
-}); });
 exports.default = productsRouter;

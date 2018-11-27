@@ -34,7 +34,10 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 adminRouter.get("/login", (req: Request, res: Response) => {
 	res.render("login.handlebars", {
 		title: "Admin Login",
-		admin: true
+		admin: true,
+		payload: {
+			user: req.user
+		}
 	});
 });
 

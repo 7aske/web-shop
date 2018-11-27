@@ -5,6 +5,7 @@ interface Product {
 	quantity?: number;
 	price?: number;
 	category?: string;
+	img?: string;
 }
 
 interface User {
@@ -74,12 +75,6 @@ function handleProductClick(target: Element): void {
 	productInputs.find(e => e.name == "category").value = product.category;
 	productInputs.find(e => e.name == "quantity").value = product.quantity.toString();
 	productInputs.find(e => e.name == "price").value = product.price.toString();
-
-	// productInputs.namedItem("name").value = product.name;
-	// productInputs.namedItem("brand").value = product.brand;
-	// productInputs.namedItem("quantity").value = product.quantity.toString();
-	// productInputs.namedItem("pid").value = product.pid;
-	// productInputs.namedItem("price").value = product.price.toString();
 	productForm.setAttribute("action", "/products/" + product.pid);
 	productSubmit.innerHTML = "Update";
 }

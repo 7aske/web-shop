@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var express_handlebars_1 = __importDefault(require("express-handlebars"));
-var body_parser_1 = __importDefault(require("body-parser"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var router_1 = __importDefault(require("./router"));
@@ -29,8 +28,8 @@ server.engine("handlebars", express_handlebars_1.default({ defaultLayout: "main"
 server.set("view engine", "handlebars");
 server.use(morgan_1.default("dev"));
 server.use(cookie_parser_1.default());
-server.use(body_parser_1.default.urlencoded({ extended: true }));
-server.use(body_parser_1.default.json());
+server.use(express_1.default.urlencoded({ extended: true }));
+server.use(express_1.default.json());
 server.use(checkCookie_1.default);
 server.use(router_1.default);
 server.listen(PORT, function () {

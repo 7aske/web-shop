@@ -47,7 +47,8 @@ var productDefinition = {
     brand: { type: String, required: true },
     quantity: { type: Number, default: 0 },
     price: { type: Number, default: 0 },
-    category: { type: String, required: false }
+    category: { type: String, required: false },
+    img: { type: String }
 };
 exports.productSchema = new mongoose_1.default.Schema(productDefinition, { collection: config_1.default.collections.products });
 var ProductModel = mongoose_1.default.model("Product", exports.productSchema);
