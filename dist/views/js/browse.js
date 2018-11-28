@@ -44,16 +44,22 @@ function productTemplate(p) {
     return "\n\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t<div class=\"font-weight-bold\">\n\t\t\t" + p.brand + "\n\t\t\t</div><div>" + p.name + "</div>\n\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t</li>";
 }
 function initOrder() {
+    var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
     if (localStorage.getItem("order") == null) {
-        var order = { products: [] };
+        var order = {
+            products: [],
+            ucookie: ucookie[0]
+        };
         localStorage.setItem("order", JSON.stringify(order));
     }
 }
 function addToCart(btn) {
     var pid = btn.getAttribute("data-pid");
+    var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
     console.log(localStorage.getItem("order"));
     var order = JSON.parse(localStorage.getItem("order"));
     order.products.push(pid);
+    order.ucookie = ucookie[0];
     localStorage.setItem("order", JSON.stringify(order));
 }
 function queryProducts() {

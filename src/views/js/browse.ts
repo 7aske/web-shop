@@ -23,18 +23,24 @@ function productTemplate(p: Product): string {
 	</li>`;
 }
 function initOrder() {
+	const ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
 	if (localStorage.getItem("order") == null) {
-		const order: any = { products: [] };
+		const order: any = {
+			products: [],
+			ucookie: ucookie[0]
+		};
 		localStorage.setItem("order", JSON.stringify(order));
 	}
 }
 
 function addToCart(btn: HTMLButtonElement) {
 	const pid = btn.getAttribute("data-pid");
+	const ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
 	console.log(localStorage.getItem("order"));
 
 	let order = JSON.parse(localStorage.getItem("order"));
 	order.products.push(pid);
+	order.ucookie = ucookie[0];
 	localStorage.setItem("order", JSON.stringify(order));
 }
 async function queryProducts(): Promise<void> {

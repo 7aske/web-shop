@@ -1,6 +1,18 @@
 "use strict";
 var orderCount = document.querySelector("#orderCount");
-if (localStorage.getItem("order") != null) {
-    var order = JSON.parse(localStorage.getItem("order"));
+var storageData = localStorage.getItem("order");
+var clearCartBtn = document.querySelector("#clearCart");
+clearCartBtn.addEventListener("click", function () { return clearCart(); });
+if (storageData != null) {
+    var order = JSON.parse(storageData);
+    if (order.ucookie != "") {
+        orderCount.innerHTML = order.products.length;
+    }
+}
+function clearCart() {
+    var order = JSON.parse(storageData);
+    console.log(order);
+    order.products = [];
+    localStorage.setItem("order", JSON.stringify(order));
     orderCount.innerHTML = order.products.length;
 }
