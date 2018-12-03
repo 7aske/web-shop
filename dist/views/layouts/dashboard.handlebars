@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-12 mb-4">
+        <div class="col-12 mb-3">
             <ul class="list-group">
                 <li class="list-group-item">Username: <span class="text-danger">{{payload.user.username}}</span></li>
                 <li class="list-group-item">First name: <span class="text-danger">{{payload.user.firstName}}</span></li>
@@ -9,12 +9,14 @@
                 <li class="list-group-item">Cart: <span class="text-danger" id="orderCount">0</span></li>
             </ul>
         </div>
-        <div class="col-12">
-            <button id="clearCart" class="btn btn-warning">Clear Cart</button>
-            <button id="buyCart" class="btn btn-success">Buy Items</button>
 
-        </div>
     </div>
+    <div id="productContainer" class="row p-3">
 
+    </div>
+    <div class="row p-3">
+        <button id="clearCart" class="btn btn-warning">Clear Cart</button>
+        <button id="buyCart" class="btn btn-success">Buy Items</button>
+    </div>
 </div>
 <script src="../js/dashbard.js"></script>

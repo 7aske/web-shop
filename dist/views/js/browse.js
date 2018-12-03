@@ -38,29 +38,39 @@ var form = document.querySelector("#queryForm");
 var inputs = form.querySelectorAll("input, select");
 var productOutput = document.querySelector("#productList");
 var url = new URL(location.host + "/products/query");
+var msgOut = document.querySelector("#msgOut");
 inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
-function productTemplate(p) {
-    return "\n\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t<div class=\"font-weight-bold\">\n\t\t\t" + p.brand + "\n\t\t\t</div><div>" + p.name + "</div>\n\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t</li>";
-}
 function initOrder() {
     var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
     if (localStorage.getItem("order") == null) {
-        var order = {
+        var order_1 = {
             products: [],
             ucookie: ucookie[0]
         };
-        localStorage.setItem("order", JSON.stringify(order));
+        localStorage.setItem("order", JSON.stringify(order_1));
     }
 }
+function messageTemplate(text, type) {
+    return "\n\t\t<div class=\"alert alert-" + type + "\">\n\t\t\t" + text + "\n\t\t</div>\n\t";
+}
+function productTemplate(p) {
+    return "\n\t\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t\t<div class=\"font-weight-bold\">\n\t\t\t\t" + p.brand + "\n\t\t\t\t</div><div>" + p.name + "</div>\n\t\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t\t</li>";
+}
 function addToCart(btn) {
-    var pid = btn.getAttribute("data-pid");
     var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
-    console.log(localStorage.getItem("order"));
-    var order = JSON.parse(localStorage.getItem("order"));
-    order.products.push(pid);
-    order.ucookie = ucookie[0];
-    localStorage.setItem("order", JSON.stringify(order));
+    msgOut.innerHTML = "";
+    if (ucookie) {
+        var pid = btn.getAttribute("data-pid");
+        var order_2 = JSON.parse(localStorage.getItem("order"));
+        order_2.products.push(pid);
+        order_2.ucookie = ucookie[0];
+        localStorage.setItem("order", JSON.stringify(order_2));
+        msgOut.innerHTML = messageTemplate("Added to cart.", "success");
+    }
+    else {
+        msgOut.innerHTML = messageTemplate("You must be logged in.", "danger");
+    }
 }
 function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {
@@ -78,7 +88,6 @@ function queryProducts() {
                 case 3:
                     results = _a.sent();
                     productOutput.innerHTML = "";
-                    console.log(results.products);
                     results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
                     return [3 /*break*/, 5];
                 case 4:

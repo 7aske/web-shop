@@ -49,24 +49,39 @@ var config_1 = __importDefault(require("../../config/config"));
 var productsRouter = express_1.Router();
 var multer_1 = __importDefault(require("multer"));
 var upload = multer_1.default();
+productsRouter.get("/query/:pid", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var product;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!req.user) return [3 /*break*/, 2];
+                return [4 /*yield*/, Product_1.default.findOne({
+                        pid: req.params.pid
+                    }).exec()];
+            case 1:
+                product = _a.sent();
+                res.status(200).send({ product: product });
+                return [3 /*break*/, 3];
+            case 2:
+                res.status(401).send({ error: "Unauthorized." });
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 productsRouter.get("/query", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var query, products;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 query = new RegExp(req.query.s, "gi");
-                if (!req.user) return [3 /*break*/, 2];
                 return [4 /*yield*/, Product_1.default.find({
                         $and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
                     }).exec()];
             case 1:
                 products = _a.sent();
                 res.status(200).send({ products: products });
-                return [3 /*break*/, 3];
-            case 2:
-                res.status(401).send({ error: "Unauthorized." });
-                _a.label = 3;
-            case 3: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });

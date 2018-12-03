@@ -47,19 +47,19 @@ orderRouter.get("/", function (req, res) {
     res.status(200).send("Hello Orders");
 });
 orderRouter.post("/", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var oid, products, order, newOrder;
+    var oid, products, order_1, newOrder;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!req.user) return [3 /*break*/, 2];
                 oid = shortid_1.generate();
                 products = req.body.products;
-                order = {
+                order_1 = {
                     oid: oid,
                     products: products,
                     user: req.user.uid
                 };
-                return [4 /*yield*/, new Order_1.default(order).save()];
+                return [4 /*yield*/, new Order_1.default(order_1).save()];
             case 1:
                 newOrder = _a.sent();
                 res.redirect("/browse");

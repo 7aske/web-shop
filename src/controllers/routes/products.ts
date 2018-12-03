@@ -15,16 +15,27 @@ const upload = multer();
 interface Cart {
 	products: string[];
 }
-productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
-	const query = new RegExp(req.query.s, "gi");
+productsRouter.get("/query/:pid", async (req: Request, res: Response) => {
 	if (req.user) {
-		const products = await Product.find({
-			$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
+		const product = await Product.findOne({
+			pid: req.params.pid
 		}).exec();
-		res.status(200).send({ products: products });
+		res.status(200).send({ product: product });
 	} else {
 		res.status(401).send({ error: "Unauthorized." });
 	}
+});
+
+productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
+	const query = new RegExp(req.query.s, "gi");
+	// if (req.user) {
+	const products = await Product.find({
+		$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
+	}).exec();
+	res.status(200).send({ products: products });
+	// } else {
+	// res.status(401).send({ error: "Unauthorized." });
+	// }
 });
 
 productsRouter.post("/cart/:pid", (req: Request, res: Response) => {});
