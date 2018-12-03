@@ -90,7 +90,7 @@ productsRouter.post("/:pid", upload.single("image"), function (req, res) { retur
     var folderPath, filePath, imgBuffer, imgString, category, newProduct, product;
     return __generator(this, function (_a) {
         folderPath = path_1.join(config_1.default.db.uploads, req.params.pid);
-        filePath = folderPath + "/thumbnail.png";
+        filePath = path_1.join(folderPath, "thumbnail.png");
         if (req.file) {
             imgBuffer = req.file.buffer;
         }
@@ -127,7 +127,7 @@ productsRouter.post("/", upload.single("image"), function (req, res, next) { ret
             case 0:
                 pid = shortid_1.generate();
                 folderPath = path_1.join(config_1.default.db.uploads, pid);
-                filePath = folderPath + "/thumbnail.png";
+                filePath = path_1.join(folderPath, "thumbnail.png");
                 if (req.file) {
                     imgBuffer = req.file.buffer;
                 }

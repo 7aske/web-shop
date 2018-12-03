@@ -42,7 +42,7 @@ productsRouter.post("/cart/:pid", (req: Request, res: Response) => {});
 
 productsRouter.post("/:pid", upload.single("image"), async (req: Request, res: Response) => {
 	const folderPath = join(config.db.uploads, req.params.pid);
-	const filePath = folderPath + "/thumbnail.png";
+	const filePath = join(folderPath, "thumbnail.png");
 	let imgBuffer: Buffer;
 	let imgString: string;
 	if (req.file) {
@@ -75,7 +75,7 @@ productsRouter.post(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const pid = generate();
 		const folderPath = join(config.db.uploads, pid);
-		const filePath = folderPath + "/thumbnail.png";
+		const filePath = join(folderPath, "thumbnail.png");
 		let imgBuffer: Buffer;
 		let imgString: string;
 		if (req.file) {

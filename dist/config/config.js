@@ -8,7 +8,7 @@ var configJSON = JSON.parse(fs_1.readFileSync(path_1.join(process.cwd(), "dist/c
 if (configJSON.db.path.length == 0)
     configJSON.db.path = path_1.join(process.cwd(), "dist/database/db");
 if (configJSON.db.url.length == 0)
-    configJSON.db.url = "mongodb://127.0.0.1:27017/database";
+    configJSON.db.url = "mongodb://127.0.0.1:27017/db";
 if (configJSON.db.uploads.length == 0)
     configJSON.db.uploads = path_1.join(process.cwd(), "dist/database/uploads");
 if (configJSON.db.defaultProduct.length == 0)

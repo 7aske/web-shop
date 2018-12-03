@@ -25,7 +25,7 @@ export interface Config {
 let configJSON: Config = JSON.parse(readFileSync(join(process.cwd(), "dist/config/config.json"), { encoding: "utf8" }));
 
 if (configJSON.db.path.length == 0) configJSON.db.path = join(process.cwd(), "dist/database/db");
-if (configJSON.db.url.length == 0) configJSON.db.url = "mongodb://127.0.0.1:27017/database";
+if (configJSON.db.url.length == 0) configJSON.db.url = "mongodb://127.0.0.1:27017/db";
 if (configJSON.db.uploads.length == 0) configJSON.db.uploads = join(process.cwd(), "dist/database/uploads");
 if (configJSON.db.defaultProduct.length == 0)
 	configJSON.db.defaultProduct = join(process.cwd(), "dist/config/product.png");
