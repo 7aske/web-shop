@@ -2,9 +2,10 @@ import { SchemaOptions, Schema } from "mongoose";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { generate } from "shortid";
-import { execSync } from "child_process";
+import { execSync, exec } from "child_process";
 import { createUser } from "../models/User";
 import Admin, { adminDefinition } from "../models/Admin";
+import { platform } from "os";
 export interface Collections {
 	users?: string;
 	products?: string;
@@ -29,9 +30,14 @@ if (configJSON.db.uploads.length == 0) configJSON.db.uploads = join(process.cwd(
 if (configJSON.db.defaultProduct.length == 0)
 	configJSON.db.defaultProduct = join(process.cwd(), "dist/config/product.png");
 if (configJSON.mongod.path.length == 0)
-	configJSON.mongod.path = execSync("where mongod")
-		.toString()
-		.split("\r\n")[0];
+	configJSON.mongod.path =
+		platform() == "win32"
+			? execSync("where mongod")
+					.toString()
+					.split("\r\n")[0]
+			: execSync("which mongod")
+					.toString()
+					.split("\r\n")[0];
 if (configJSON.mongod.conf.length == 0) configJSON.mongod.conf = join(process.cwd(), "dist/config/mongod.cfg");
 if (isNaN(configJSON.serverPort)) configJSON.serverPort = 3000;
 if (!existsSync(configJSON.db.path)) mkdirSync(configJSON.db.path, { recursive: true });
