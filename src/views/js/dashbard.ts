@@ -23,7 +23,7 @@ function clearCart() {
 	order.products = [];
 	localStorage.setItem("order", JSON.stringify(order));
 	orderCount.innerHTML = order.products.length;
-	displayProducts();
+	productContainer.innerHTML = "";
 }
 
 function productDashboardTemplate(p: Product) {
