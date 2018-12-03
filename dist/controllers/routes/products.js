@@ -98,7 +98,7 @@ productsRouter.post("/:pid", upload.single("image"), function (req, res) { retur
             imgBuffer = fs_1.readFileSync(config_1.default.db.defaultProduct);
         }
         imgString = imgBuffer.toString("base64");
-        if (!fs_1.existsSync(filePath))
+        if (!fs_1.existsSync(folderPath))
             fs_1.mkdirSync(folderPath, { recursive: true });
         fs_1.writeFile(filePath, imgBuffer, function () { });
         category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
@@ -135,8 +135,8 @@ productsRouter.post("/", upload.single("image"), function (req, res, next) { ret
                     imgBuffer = fs_1.readFileSync(config_1.default.db.defaultProduct);
                 }
                 imgString = imgBuffer.toString("base64");
-                if (!fs_1.existsSync(filePath))
-                    fs_1.mkdirSync(filePath, { recursive: true });
+                if (!fs_1.existsSync(folderPath))
+                    fs_1.mkdirSync(folderPath, { recursive: true });
                 fs_1.writeFile(filePath, imgBuffer, function () { });
                 category = config_1.default.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
                 product = {

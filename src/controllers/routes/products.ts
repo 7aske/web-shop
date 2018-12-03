@@ -51,7 +51,7 @@ productsRouter.post("/:pid", upload.single("image"), async (req: Request, res: R
 		imgBuffer = readFileSync(config.db.defaultProduct);
 	}
 	imgString = imgBuffer.toString("base64");
-	if (!existsSync(filePath)) mkdirSync(folderPath, { recursive: true });
+	if (!existsSync(folderPath)) mkdirSync(folderPath, { recursive: true });
 	writeFile(filePath, imgBuffer, () => {});
 	const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 	const newProduct: productDefinition = {
@@ -84,7 +84,7 @@ productsRouter.post(
 			imgBuffer = readFileSync(config.db.defaultProduct);
 		}
 		imgString = imgBuffer.toString("base64");
-		if (!existsSync(filePath)) mkdirSync(filePath, { recursive: true });
+		if (!existsSync(folderPath)) mkdirSync(folderPath, { recursive: true });
 		writeFile(filePath, imgBuffer, () => {});
 		const category = config.categories.indexOf(req.body.category) != -1 ? req.body.category : "none";
 		const product: productDefinition = {
