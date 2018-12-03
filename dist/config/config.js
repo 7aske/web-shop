@@ -6,9 +6,9 @@ var child_process_1 = require("child_process");
 var os_1 = require("os");
 var configJSON = JSON.parse(fs_1.readFileSync(path_1.join(process.cwd(), "dist/config/config.json"), { encoding: "utf8" }));
 if (configJSON.db.path.length == 0)
-    configJSON.db.path = path_1.join(process.cwd(), "dist/database/db");
+    configJSON.db.path = path_1.join(process.cwd(), "dist/database/database");
 if (configJSON.db.url.length == 0)
-    configJSON.db.url = "mongodb://127.0.0.1:27017/db";
+    configJSON.db.url = "mongodb://127.0.0.1:27017/database";
 if (configJSON.db.uploads.length == 0)
     configJSON.db.uploads = path_1.join(process.cwd(), "dist/database/uploads");
 if (configJSON.db.defaultProduct.length == 0)
