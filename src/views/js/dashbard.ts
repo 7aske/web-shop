@@ -12,7 +12,7 @@ let order: OrderStorage;
 
 if (storageData != null) {
 	order = JSON.parse(storageData);
-	if (order.ucookie != "") {
+	if (order.ucookie == document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"))[0]) {
 		orderCount.innerHTML = order.products.length.toString();
 		displayProducts();
 	}
@@ -23,6 +23,7 @@ function clearCart() {
 	order.products = [];
 	localStorage.setItem("order", JSON.stringify(order));
 	orderCount.innerHTML = order.products.length;
+	displayProducts();
 }
 
 function productDashboardTemplate(p: Product) {

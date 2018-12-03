@@ -42,7 +42,7 @@ clearCartBtn.addEventListener("click", function () { return clearCart(); });
 var order;
 if (storageData != null) {
     order = JSON.parse(storageData);
-    if (order.ucookie != "") {
+    if (order.ucookie == document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"))[0]) {
         orderCount.innerHTML = order.products.length.toString();
         displayProducts();
     }
@@ -52,6 +52,7 @@ function clearCart() {
     order.products = [];
     localStorage.setItem("order", JSON.stringify(order));
     orderCount.innerHTML = order.products.length;
+    displayProducts();
 }
 function productDashboardTemplate(p) {
     return "\n\t\t<div class=\"card col-3\">\n\t\t\t<img class=\"card-img-top\" src='data:image/png;base64," + p.img + "' alt=\"Product image\">\n\t\t\t<div class=\"card-body\">\n\t\t\t\t<h5 class=\"card-title text-center\">" + p.name + "</h5>\n\t\t\t\t<ul class=\"list-group list-group-flush\">\n\t\t\t\t\t<li class=\"list-group-item\">Brand: " + p.brand + "</li>\n\t\t\t\t\t<li class=\"list-group-item\">Categ: " + p.category + "</li>\n\t\t\t\t</ul>\n\t\t\t</div>\t\t\t\t\n\t\t</div>";

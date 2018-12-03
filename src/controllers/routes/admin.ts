@@ -33,13 +33,17 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 });
 
 adminRouter.get("/login", (req: Request, res: Response) => {
-	res.render("login.handlebars", {
-		title: "Admin Login",
-		admin: true,
-		payload: {
-			user: req.user
-		}
-	});
+	if (req.user) {
+		res.redirect("/admin/dashboard");
+	} else {
+		res.render("login.handlebars", {
+			title: "Admin Login",
+			admin: true,
+			payload: {
+				user: req.user
+			}
+		});
+	}
 });
 
 adminRouter.post("/login", async (req: Request, res: Response) => {

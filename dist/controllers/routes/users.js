@@ -126,7 +126,12 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
     });
 }); });
 usersRouter.get("/login", function (req, res) {
-    res.render("login.handlebars");
+    if (req.user) {
+        res.redirect("/users/dashboard");
+    }
+    else {
+        res.render("login.handlebars");
+    }
 });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var user, foundUser, token;

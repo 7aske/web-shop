@@ -61,7 +61,11 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 });
 
 usersRouter.get("/login", (req: Request, res: Response) => {
-	res.render("login.handlebars");
+	if (req.user) {
+		res.redirect("/users/dashboard");
+	} else {
+		res.render("login.handlebars");
+	}
 });
 
 usersRouter.post("/login", async (req: Request, res: Response) => {

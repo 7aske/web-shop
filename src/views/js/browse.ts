@@ -12,12 +12,14 @@ inputs[1].addEventListener("input", () => queryProducts());
 
 function initOrder() {
 	const ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
-	if (localStorage.getItem("order") == null) {
-		const order: any = {
-			products: [],
-			ucookie: ucookie[0]
-		};
-		localStorage.setItem("order", JSON.stringify(order));
+	if (ucookie) {
+		if (localStorage.getItem("order") == null) {
+			const order: any = {
+				products: [],
+				ucookie: ucookie[0]
+			};
+			localStorage.setItem("order", JSON.stringify(order));
+		}
 	}
 }
 
@@ -46,9 +48,13 @@ function productTemplate(p: Product): string {
 function addToCart(btn: HTMLButtonElement) {
 	const ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
 	msgOut.innerHTML = "";
+
 	if (ucookie) {
 		const pid = btn.getAttribute("data-pid");
 		let order = JSON.parse(localStorage.getItem("order"));
+		if (ucookie != order.ucookie) {
+			order.products = [];
+		}
 		order.products.push(pid);
 		order.ucookie = ucookie[0];
 		localStorage.setItem("order", JSON.stringify(order));

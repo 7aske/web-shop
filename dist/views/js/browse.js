@@ -43,12 +43,14 @@ inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
 function initOrder() {
     var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
-    if (localStorage.getItem("order") == null) {
-        var order_1 = {
-            products: [],
-            ucookie: ucookie[0]
-        };
-        localStorage.setItem("order", JSON.stringify(order_1));
+    if (ucookie) {
+        if (localStorage.getItem("order") == null) {
+            var order_1 = {
+                products: [],
+                ucookie: ucookie[0]
+            };
+            localStorage.setItem("order", JSON.stringify(order_1));
+        }
     }
 }
 function messageTemplate(text, type) {
@@ -63,6 +65,9 @@ function addToCart(btn) {
     if (ucookie) {
         var pid = btn.getAttribute("data-pid");
         var order_2 = JSON.parse(localStorage.getItem("order"));
+        if (ucookie != order_2.ucookie) {
+            order_2.products = [];
+        }
         order_2.products.push(pid);
         order_2.ucookie = ucookie[0];
         localStorage.setItem("order", JSON.stringify(order_2));
