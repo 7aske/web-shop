@@ -1,0 +1,27 @@
+.card {
+	.card-img-top {
+		text-align: center;
+		img {
+			width: 100%;
+		}
+	}
+	.card-footer {
+		button {
+			width: 100%;
+		}
+	}
+}
+
+@media screen and (max-width: 560px) {
+	.card {
+		display: block !important;
+		padding: 10px;
+		img {
+			width: 100px;
+		}
+		div {
+			font-size: 20px;
+			display: block !important;
+		}
+	}
+}

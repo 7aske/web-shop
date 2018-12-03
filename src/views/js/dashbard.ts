@@ -43,7 +43,7 @@ function productDashboardTemplate(p: Product) {
 async function displayProducts() {
 	productContainer.innerHTML = "";
 	order.products.forEach(async p => {
-		const u = "http://" + new URL(location.host + "/products/query/" + p);
+		const u = "http://" + location.host + "/products/query/" + p;
 		const result = await (await fetch(u)).json();
 		productContainer.innerHTML += productDashboardTemplate(result.product);
 	});

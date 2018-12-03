@@ -70,16 +70,25 @@ productsRouter.get("/query/:pid", function (req, res) { return __awaiter(_this, 
     });
 }); });
 productsRouter.get("/query", checkCookie_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var query, products;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var query, products, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 query = new RegExp(req.query.s, "gi");
+                if (!(req.query.s != undefined && req.query.c != "none")) return [3 /*break*/, 2];
                 return [4 /*yield*/, Product_1.default.find({
                         $and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
                     }).exec()];
             case 1:
-                products = _a.sent();
+                _a = _b.sent();
+                return [3 /*break*/, 4];
+            case 2: return [4 /*yield*/, Product_1.default.find().exec()];
+            case 3:
+                _a = _b.sent();
+                _b.label = 4;
+            case 4:
+                products = _a;
+                console.log(req.query.s);
                 res.status(200).send({ products: products });
                 return [2 /*return*/];
         }

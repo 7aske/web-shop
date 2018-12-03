@@ -29,9 +29,14 @@ productsRouter.get("/query/:pid", async (req: Request, res: Response) => {
 productsRouter.get("/query", checkCookie, async (req: Request, res: Response) => {
 	const query = new RegExp(req.query.s, "gi");
 	// if (req.user) {
-	const products = await Product.find({
-		$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
-	}).exec();
+	const products =
+		req.query.s != undefined && req.query.c != "none"
+			? await Product.find({
+					$and: [{ category: req.query.c }, { $or: [{ name: query }, { brand: query }] }]
+			  }).exec()
+			: await Product.find().exec();
+	console.log(req.query.s);
+
 	res.status(200).send({ products: products });
 	// } else {
 	// res.status(401).send({ error: "Unauthorized." });

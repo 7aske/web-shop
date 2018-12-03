@@ -4,13 +4,12 @@ interface QueryResponse {
 const form: HTMLFormElement = document.querySelector("#queryForm");
 const inputs: NodeListOf<HTMLInputElement> = form.querySelectorAll("input, select");
 const productOutput = document.querySelector("#productList");
-const url = new URL(location.host + "/products/query");
 const msgOut = document.querySelector("#msgOut");
 
 inputs[0].addEventListener("change", () => queryProducts());
 inputs[1].addEventListener("input", () => queryProducts());
 
-function initOrder() {
+async function initOrder() {
 	const ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
 	if (ucookie) {
 		if (localStorage.getItem("order") == null) {
@@ -21,6 +20,12 @@ function initOrder() {
 			localStorage.setItem("order", JSON.stringify(order));
 		}
 	}
+	let results: QueryResponse;
+	try {
+		results = await (await fetch("http://" + location.host + "/products/query")).json();
+		productOutput.innerHTML = "";
+		results.products.forEach(p => (productOutput.innerHTML += productTemplate(p)));
+	} catch (err) {}
 }
 
 function messageTemplate(text: string, type: string) {
@@ -33,16 +38,35 @@ function messageTemplate(text: string, type: string) {
 
 function productTemplate(p: Product): string {
 	return `
-		<li class="list-group-item list-group-item-action d-flex justify-content-between">
-			<div><img src='data:image/png;base64,${p.img}'></div>
-			<div class="font-weight-bold">
-				${p.brand}
-				</div><div>${p.name}</div>
-			<div class="text-danger">Quantity: ${p.quantity}</div>
-			<div><span class="text-danger">Price: ${p.price}</div>
-			<div><small>Category: ${p.category}</small></div>
-			<button class="btn btn-success" data-pid="${p.pid}" onclick="addToCart(this)">Cart</button>
-		</li>`;
+		<div class="card col-md-4 col-sm-12 pr-0 pl-0">
+			<div class="card-img-top">
+				<img src='data:image/png;base64,${p.img}'>
+			</div>
+			<div class="card-body">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item list-group-item-flush">
+						<span class="font-weight-bold">
+							${p.brand}
+						</span>
+					</li>
+					<li class="list-group-item list-group-item-flush">
+						${p.name}
+					</li>	
+					<li class="list-group-item list-group-item-flush">
+						Price: ${p.price}		
+					</li>		
+					<li class="list-group-item list-group-item-flush">
+						Quantity: ${p.quantity}		
+					</li>			
+					<li class="list-group-item list-group-item-flush">
+						Category: ${p.category}		
+					</li>			
+				</ul>
+			</div>
+			<div class="card-footer">
+				<button class="btn btn-success" data-pid="${p.pid}" onclick="addToCart(this)">Cart</button>
+			</div>
+		</div>`;
 }
 
 function addToCart(btn: HTMLButtonElement) {
@@ -61,14 +85,16 @@ function addToCart(btn: HTMLButtonElement) {
 		msgOut.innerHTML = messageTemplate("Added to cart.", "success");
 	} else {
 		msgOut.innerHTML = messageTemplate("You must be logged in.", "danger");
+		setTimeout(() => {
+			msgOut.scrollIntoView({ behavior: "smooth" });
+		}, 100);
 	}
 }
 async function queryProducts(): Promise<void> {
 	const query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
-	url.search = query;
 	let results: QueryResponse;
 	try {
-		results = await (await fetch("http://" + url.href)).json();
+		results = await (await fetch("http://" + location.host + "/products/query?" + query)).json();
 		productOutput.innerHTML = "";
 		results.products.forEach(p => (productOutput.innerHTML += productTemplate(p)));
 	} catch (err) {}

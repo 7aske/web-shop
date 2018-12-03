@@ -67,7 +67,7 @@ function displayProducts() {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            u = "http://" + new URL(location.host + "/products/query/" + p);
+                            u = "http://" + location.host + "/products/query/" + p;
                             return [4 /*yield*/, fetch(u)];
                         case 1: return [4 /*yield*/, (_a.sent()).json()];
                         case 2:

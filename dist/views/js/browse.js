@@ -37,27 +37,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var form = document.querySelector("#queryForm");
 var inputs = form.querySelectorAll("input, select");
 var productOutput = document.querySelector("#productList");
-var url = new URL(location.host + "/products/query");
 var msgOut = document.querySelector("#msgOut");
 inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
 function initOrder() {
-    var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
-    if (ucookie) {
-        if (localStorage.getItem("order") == null) {
-            var order_1 = {
-                products: [],
-                ucookie: ucookie[0]
-            };
-            localStorage.setItem("order", JSON.stringify(order_1));
-        }
-    }
+    return __awaiter(this, void 0, void 0, function () {
+        var ucookie, order_1, results, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
+                    if (ucookie) {
+                        if (localStorage.getItem("order") == null) {
+                            order_1 = {
+                                products: [],
+                                ucookie: ucookie[0]
+                            };
+                            localStorage.setItem("order", JSON.stringify(order_1));
+                        }
+                    }
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, fetch("http://" + location.host + "/products/query")];
+                case 2: return [4 /*yield*/, (_a.sent()).json()];
+                case 3:
+                    results = _a.sent();
+                    productOutput.innerHTML = "";
+                    results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
+                    return [3 /*break*/, 5];
+                case 4:
+                    err_1 = _a.sent();
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
 }
 function messageTemplate(text, type) {
     return "\n\t\t<div class=\"alert alert-" + type + "\">\n\t\t\t" + text + "\n\t\t</div>\n\t";
 }
 function productTemplate(p) {
-    return "\n\t\t<li class=\"list-group-item list-group-item-action d-flex justify-content-between\">\n\t\t\t<div><img src='data:image/png;base64," + p.img + "'></div>\n\t\t\t<div class=\"font-weight-bold\">\n\t\t\t\t" + p.brand + "\n\t\t\t\t</div><div>" + p.name + "</div>\n\t\t\t<div class=\"text-danger\">Quantity: " + p.quantity + "</div>\n\t\t\t<div><span class=\"text-danger\">Price: " + p.price + "</div>\n\t\t\t<div><small>Category: " + p.category + "</small></div>\n\t\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t\t</li>";
+    return "\n\t\t<div class=\"card col-md-4 col-sm-12 pr-0 pl-0\">\n\t\t\t<div class=\"card-img-top\">\n\t\t\t\t<img src='data:image/png;base64," + p.img + "'>\n\t\t\t</div>\n\t\t\t<div class=\"card-body\">\n\t\t\t\t<ul class=\"list-group list-group-flush\">\n\t\t\t\t\t<li class=\"list-group-item list-group-item-flush\">\n\t\t\t\t\t\t<span class=\"font-weight-bold\">\n\t\t\t\t\t\t\t" + p.brand + "\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"list-group-item list-group-item-flush\">\n\t\t\t\t\t\t" + p.name + "\n\t\t\t\t\t</li>\t\n\t\t\t\t\t<li class=\"list-group-item list-group-item-flush\">\n\t\t\t\t\t\tPrice: " + p.price + "\t\t\n\t\t\t\t\t</li>\t\t\n\t\t\t\t\t<li class=\"list-group-item list-group-item-flush\">\n\t\t\t\t\t\tQuantity: " + p.quantity + "\t\t\n\t\t\t\t\t</li>\t\t\t\n\t\t\t\t\t<li class=\"list-group-item list-group-item-flush\">\n\t\t\t\t\t\tCategory: " + p.category + "\t\t\n\t\t\t\t\t</li>\t\t\t\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t\t<div class=\"card-footer\">\n\t\t\t\t<button class=\"btn btn-success\" data-pid=\"" + p.pid + "\" onclick=\"addToCart(this)\">Cart</button>\n\t\t\t</div>\n\t\t</div>";
 }
 function addToCart(btn) {
     var ucookie = document.cookie.match(new RegExp(/(?<=user=)(.+);?/, "gi"));
@@ -75,20 +96,22 @@ function addToCart(btn) {
     }
     else {
         msgOut.innerHTML = messageTemplate("You must be logged in.", "danger");
+        setTimeout(function () {
+            msgOut.scrollIntoView({ behavior: "smooth" });
+        }, 100);
     }
 }
 function queryProducts() {
     return __awaiter(this, void 0, void 0, function () {
-        var query, results, err_1;
+        var query, results, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
-                    url.search = query;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
-                    return [4 /*yield*/, fetch("http://" + url.href)];
+                    return [4 /*yield*/, fetch("http://" + location.host + "/products/query?" + query)];
                 case 2: return [4 /*yield*/, (_a.sent()).json()];
                 case 3:
                     results = _a.sent();
@@ -96,7 +119,7 @@ function queryProducts() {
                     results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
                     return [3 /*break*/, 5];
                 case 4:
-                    err_1 = _a.sent();
+                    err_2 = _a.sent();
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }

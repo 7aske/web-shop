@@ -1,26 +1,4 @@
-<style>
-    .list-group-item {
-        text-align: center;
-        height: 50px;
-                padding: 0px;
-        padding-
-    }
-    .list-group-item div {
-        text-align: left;
-        margin-top:12px;
-        width: 15% !important;
-    }
-    .list-group-item div img {
-        margin-top: -5px;
-        height: 100%;
-    }
-    .list-group-item div:first-of-type{
-        padding-left: 20px;
-    }
-    .list-group-item button {
-        margin-right: -1px;
-    }
-</style>
+<link rel="stylesheet" href="../css/browse.css">
 <div class="container">
     <div class="row mt-3">
         <div class="col-12" id="queryBar">
@@ -28,7 +6,7 @@
                 <div class="row">
                     <div class="input-group col-md-6 col-sm-12">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="category">Category</label>
+                            <label class="input-group-text" style="width:6em;" for="category">Category</label>
                         </div>
                         <select class="custom-select" id="category">
                             {{#each payload.categories}}
@@ -38,7 +16,7 @@
                     </div>
                     <div class="input-group col-md-6 col-sm-12">
                         <div class="input-group-prepend">
-                            <label class="input-group-text" for="query">Search</label>
+                            <label class="input-group-text" style="width:6em;" for="query">Search</label>
                         </div>
                         <input class="form-control" type="text" name="query" placeholder="Search">
                     </div>
@@ -51,10 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <ul class="list-group w-100" id="productList">
-
-        </ul>
+    <div class="row mt-4" id="productList">
 
     </div>
 </div>
