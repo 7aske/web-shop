@@ -28,7 +28,7 @@ function clearCart() {
 
 function productDashboardTemplate(p: Product) {
 	return `
-		<div class="card col-3">
+		<div class="card col-md-3 col-sm-12">
 			<img class="card-img-top" src='data:image/png;base64,${p.img}' alt="Product image">
 			<div class="card-body">
 				<h5 class="card-title text-center">${p.name}</h5>
