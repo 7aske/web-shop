@@ -32,10 +32,12 @@ exports.default = (function (req, res, next) {
             }
         }
         catch (err) {
+            res.clearCookie("user");
             req.user = undefined;
         }
     }
     else {
+        res.clearCookie("user");
         req.user = undefined;
     }
     next();

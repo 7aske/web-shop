@@ -27,7 +27,11 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 			}
 		});
 	} else {
-		res.status(403).send({ message: "Unauthorized." });
+		res.render("login.handlebars", {
+			title: "Admin Login",
+			admin: true,
+			payload: { errors: ["Unauthorized. Please log in."] }
+		});
 	}
 });
 
@@ -37,16 +41,14 @@ adminRouter.get("/login", (req: Request, res: Response) => {
 	} else {
 		res.render("login.handlebars", {
 			title: "Admin Login",
-			admin: true,
-			payload: {
-				user: req.admin
-			}
+			admin: true
 		});
 	}
 });
 
 adminRouter.post("/login", async (req: Request, res: Response) => {
 	const admin: any = await Admin.findOne({ username: req.body.username }).exec();
+	let loginErrors: string[] = [];
 	if (admin) {
 		const foundAdmin: adminDefinition = {
 			username: admin.username,
@@ -62,13 +64,16 @@ adminRouter.post("/login", async (req: Request, res: Response) => {
 				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
 				res.redirect("/admin/dashboard");
 			} else {
-				res.status(403).send({ error: "Unauthorized." });
+				loginErrors.push("Invalid password.");
+				res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
 			}
 		} catch (err) {
-			res.status(403).send({ error: "Unauthorized." });
+			loginErrors.push("Something went wrong.");
+			res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
 		}
 	} else {
-		res.redirect("/admin/login");
+		loginErrors.push("Invalid admin username.");
+		res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
 	}
 });
 

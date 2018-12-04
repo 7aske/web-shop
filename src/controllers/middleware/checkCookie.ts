@@ -20,9 +20,11 @@ export default (req: Request, res: Response, next: NextFunction) => {
 				req.user = undefined;
 			}
 		} catch (err) {
+			res.clearCookie("user");
 			req.user = undefined;
 		}
 	} else {
+		res.clearCookie("user");
 		req.user = undefined;
 	}
 	next();

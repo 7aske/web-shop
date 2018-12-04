@@ -73,7 +73,11 @@ adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, functio
             });
         }
         else {
-            res.status(403).send({ message: "Unauthorized." });
+            res.render("login.handlebars", {
+                title: "Admin Login",
+                admin: true,
+                payload: { errors: ["Unauthorized. Please log in."] }
+            });
         }
         return [2 /*return*/];
     });
@@ -85,20 +89,18 @@ adminRouter.get("/login", function (req, res) {
     else {
         res.render("login.handlebars", {
             title: "Admin Login",
-            admin: true,
-            payload: {
-                user: req.admin
-            }
+            admin: true
         });
     }
 });
 adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var admin, foundAdmin, check, token, err_1;
+    var admin, loginErrors, foundAdmin, check, token, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, Admin_1.default.findOne({ username: req.body.username }).exec()];
             case 1:
                 admin = _a.sent();
+                loginErrors = [];
                 if (!admin) return [3 /*break*/, 6];
                 foundAdmin = {
                     username: admin.username,
@@ -119,16 +121,19 @@ adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                     res.redirect("/admin/dashboard");
                 }
                 else {
-                    res.status(403).send({ error: "Unauthorized." });
+                    loginErrors.push("Invalid password.");
+                    res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
                 }
                 return [3 /*break*/, 5];
             case 4:
                 err_1 = _a.sent();
-                res.status(403).send({ error: "Unauthorized." });
+                loginErrors.push("Something went wrong.");
+                res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
                 return [3 /*break*/, 5];
             case 5: return [3 /*break*/, 7];
             case 6:
-                res.redirect("/admin/login");
+                loginErrors.push("Invalid admin username.");
+                res.render("login.handlebars", { title: "Admin Login", admin: true, payload: { errors: loginErrors } });
                 _a.label = 7;
             case 7: return [2 /*return*/];
         }

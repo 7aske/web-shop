@@ -11,11 +11,10 @@ usersRouter.get("/", async (req: Request, res: Response) => {
 });
 
 usersRouter.get("/dashboard", (req: Request, res: Response) => {
-	const user = req.user;
-	if (user) {
-		res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: user } });
+	if (req.user) {
+		res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: req.user } });
 	} else {
-		res.status(403).send({ error: "Unauthorized." });
+		res.render("login.handlebars", { title: "Login", payload: { errors: ["Unauthorized. Please log in."] } });
 	}
 });
 
@@ -64,7 +63,7 @@ usersRouter.get("/login", (req: Request, res: Response) => {
 	if (req.user) {
 		res.redirect("/users/dashboard");
 	} else {
-		res.render("login.handlebars");
+		res.render("login.handlebars", { title: "Login" });
 	}
 });
 
@@ -72,7 +71,7 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 	const user: any = await User.findOne({
 		$or: [{ username: req.body.username }, { email: req.body.username }]
 	}).exec();
-
+	let loginErrors: string[] = [];
 	if (user) {
 		const foundUser: userDefinition = {
 			pid: user.pid,
@@ -89,13 +88,16 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
 				res.redirect("/users/dashboard");
 			} else {
-				res.status(403).send({ error: "Unauthorized." });
+				loginErrors.push("Invalid password.");
+				res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
 			}
 		} catch (err) {
-			res.status(403).send({ error: "Unauthorized." });
+			loginErrors.push("Something went wrong.");
+			res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
 		}
 	} else {
-		res.status(401).send({ error: "User not found." });
+		loginErrors.push("User not found.");
+		res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
 	}
 });
 

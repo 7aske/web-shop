@@ -65,12 +65,11 @@ usersRouter.get("/", function (req, res) { return __awaiter(_this, void 0, void 
     });
 }); });
 usersRouter.get("/dashboard", function (req, res) {
-    var user = req.user;
-    if (user) {
-        res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: user } });
+    if (req.user) {
+        res.render("dashboard.handlebars", { title: "Dashboard", payload: { user: req.user } });
     }
     else {
-        res.status(403).send({ error: "Unauthorized." });
+        res.render("login.handlebars", { title: "Login", payload: { errors: ["Unauthorized. Please log in."] } });
     }
 });
 // usersRouter.get("/:uid", (req: Request, res: Response) => {
@@ -130,11 +129,11 @@ usersRouter.get("/login", function (req, res) {
         res.redirect("/users/dashboard");
     }
     else {
-        res.render("login.handlebars");
+        res.render("login.handlebars", { title: "Login" });
     }
 });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, foundUser, token;
+    var user, loginErrors, foundUser, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, User_1.default.findOne({
@@ -142,6 +141,7 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                 }).exec()];
             case 1:
                 user = _a.sent();
+                loginErrors = [];
                 if (user) {
                     foundUser = {
                         pid: user.pid,
@@ -159,15 +159,18 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                             res.redirect("/users/dashboard");
                         }
                         else {
-                            res.status(403).send({ error: "Unauthorized." });
+                            loginErrors.push("Invalid password.");
+                            res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
                         }
                     }
                     catch (err) {
-                        res.status(403).send({ error: "Unauthorized." });
+                        loginErrors.push("Something went wrong.");
+                        res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
                     }
                 }
                 else {
-                    res.status(401).send({ error: "User not found." });
+                    loginErrors.push("User not found.");
+                    res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
                 }
                 return [2 /*return*/];
         }
