@@ -158,7 +158,7 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                     }
                 }
                 else {
-                    res.render("login.handlebars", { title: "Login", payload: { errors: ["Invalid password."] } });
+                    res.render("login.handlebars", { title: "Login", payload: { errors: ["User not found."] } });
                 }
                 return [2 /*return*/];
         }

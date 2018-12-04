@@ -5,6 +5,7 @@ const form: HTMLFormElement = document.querySelector("#queryForm");
 const inputs: NodeListOf<HTMLInputElement> = form.querySelectorAll("input, select");
 const productOutput = document.querySelector("#productList");
 const msgOut = document.querySelector("#msgOut");
+const overlay = <HTMLDivElement>document.querySelector("#overlay");
 
 inputs[0].addEventListener("change", () => queryProducts());
 inputs[1].addEventListener("input", () => queryProducts());
@@ -91,12 +92,14 @@ function addToCart(btn: HTMLButtonElement) {
 	}
 }
 async function queryProducts(): Promise<void> {
+	overlay.style.display = "block";
 	const query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
 	let results: QueryResponse;
 	try {
 		results = await (await fetch("http://" + location.host + "/products/query?" + query)).json();
 		productOutput.innerHTML = "";
 		results.products.forEach(p => (productOutput.innerHTML += productTemplate(p)));
+		overlay.style.display = "none";
 	} catch (err) {}
 }
 initOrder();

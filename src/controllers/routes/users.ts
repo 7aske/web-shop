@@ -85,7 +85,7 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 			res.render("login.handlebars", { title: "Login", payload: { errors: ["Something went wrong."] } });
 		}
 	} else {
-		res.render("login.handlebars", { title: "Login", payload: { errors: ["Invalid password."] } });
+		res.render("login.handlebars", { title: "Login", payload: { errors: ["User not found."] } });
 	}
 });
 

@@ -38,6 +38,7 @@ var form = document.querySelector("#queryForm");
 var inputs = form.querySelectorAll("input, select");
 var productOutput = document.querySelector("#productList");
 var msgOut = document.querySelector("#msgOut");
+var overlay = document.querySelector("#overlay");
 inputs[0].addEventListener("change", function () { return queryProducts(); });
 inputs[1].addEventListener("input", function () { return queryProducts(); });
 function initOrder() {
@@ -107,6 +108,7 @@ function queryProducts() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    overlay.style.display = "block";
                     query = "c=" + inputs[0].value + "&s=" + inputs[1].value;
                     _a.label = 1;
                 case 1:
@@ -117,6 +119,7 @@ function queryProducts() {
                     results = _a.sent();
                     productOutput.innerHTML = "";
                     results.products.forEach(function (p) { return (productOutput.innerHTML += productTemplate(p)); });
+                    overlay.style.display = "none";
                     return [3 /*break*/, 5];
                 case 4:
                     err_2 = _a.sent();
