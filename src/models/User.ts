@@ -15,6 +15,15 @@ export interface userDefinition {
 	[key: string]: string | orderDefinition[] | undefined;
 }
 
+export interface registrationErrors {
+	username?: string[];
+	email?: string[];
+	firstName?: string[];
+	lastName?: string[];
+	password?: string[];
+	[key: string]: string[];
+}
+
 const userTemplate: mongoose.SchemaDefinition = {
 	uid: { type: String, default: generate },
 	username: { type: String, required: true },
@@ -46,4 +55,34 @@ export function comparePasswords(hashed: string, notHashed: string): boolean {
 			.update(notHashed)
 			.digest("hex")
 	);
+}
+export function validate(user: userDefinition) {
+	const onlyAlphanumeric = new RegExp(/^[^.-][a-zA-z0-9.-]+[^.-]$/);
+	const onlyCharacters = new RegExp(/^[a-zA-Z]+$/);
+	const email = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+	let regErrors: registrationErrors = {
+		username: [],
+		password: [],
+		email: [],
+		firstName: [],
+		lastName: []
+	};
+
+	if (user.username.length == 0) regErrors.username.push("Username required.");
+	if (!onlyAlphanumeric.test(user.username)) regErrors.username.push("Only alphanumeric characters.");
+	if (user.password.length == 0) regErrors.password.push("Password required.");
+	if (user.email.length == 0) regErrors.email.push("Email required.");
+	if (!email.test(user.email)) regErrors.email.push("Invalid email.");
+	if (user.firstName.length == 0) regErrors.firstName.push("First name required.");
+	if (!onlyCharacters.test(user.firstName)) regErrors.firstName.push("Only characters.");
+	if (user.lastName.length == 0) regErrors.lastName.push("Last name required.");
+	if (!onlyCharacters.test(user.lastName)) regErrors.lastName.push("Only characters.");
+	let check = false;
+	console.log(user.lastName, user.firstName);
+
+	Object.keys(regErrors).forEach(e => {
+		if (regErrors[e].length > 0) check = true;
+	});
+	if (check) return regErrors;
+	else return null;
 }

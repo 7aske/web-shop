@@ -77,10 +77,10 @@ usersRouter.get("/dashboard", function (req, res) {
 // 	res.send("Hello User " + uid);
 // });
 usersRouter.get("/register", function (req, res) {
-    res.render("register.handlebars");
+    res.render("register.handlebars", { title: "Register" });
 });
 usersRouter.post("/register", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, inputError, key, check, newUser;
+    var user, regErrors, check, newUser;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -91,13 +91,8 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
                     email: req.body.email,
                     password: req.body.password
                 };
-                inputError = false;
-                for (key in user) {
-                    if (user[key] == "" || user[key] == undefined) {
-                        inputError = true;
-                    }
-                }
-                if (!!inputError) return [3 /*break*/, 5];
+                regErrors = User_1.validate(user);
+                if (!!regErrors) return [3 /*break*/, 5];
                 return [4 /*yield*/, User_1.default.find({ $or: [{ username: user.username }, { email: user.email }] }).exec()];
             case 1:
                 check = _a.sent();
@@ -118,7 +113,7 @@ usersRouter.post("/register", function (req, res) { return __awaiter(_this, void
                 _a.label = 4;
             case 4: return [3 /*break*/, 6];
             case 5:
-                res.render("register.handlebars");
+                res.render("register.handlebars", { title: "Register", payload: { regErrors: regErrors, validFields: user } });
                 _a.label = 6;
             case 6: return [2 /*return*/];
         }

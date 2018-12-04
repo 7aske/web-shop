@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import User, { userDefinition, comparePasswords, createUser } from "../../models/User";
+import User, { userDefinition, comparePasswords, createUser, validate, registrationErrors } from "../../models/User";
 import config from "../../config/config";
 import checkCookie from "../middleware/checkCookie";
 const usersRouter = Router();
@@ -24,7 +24,7 @@ usersRouter.get("/dashboard", (req: Request, res: Response) => {
 // });
 
 usersRouter.get("/register", (req: Request, res: Response) => {
-	res.render("register.handlebars");
+	res.render("register.handlebars", { title: "Register" });
 });
 
 usersRouter.post("/register", async (req: Request, res: Response) => {
@@ -35,13 +35,8 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 		email: req.body.email,
 		password: req.body.password
 	};
-	let inputError = false;
-	for (let key in user) {
-		if (user[key] == "" || user[key] == undefined) {
-			inputError = true;
-		}
-	}
-	if (!inputError) {
+	let regErrors: registrationErrors = validate(user);
+	if (!regErrors) {
 		const check = await User.find({ $or: [{ username: user.username }, { email: user.email }] }).exec();
 		console.log(check);
 		if (check.length == 0) {
@@ -55,7 +50,7 @@ usersRouter.post("/register", async (req: Request, res: Response) => {
 			res.status(401).send({ error: "Username/e-mail taken." });
 		}
 	} else {
-		res.render("register.handlebars");
+		res.render("register.handlebars", { title: "Register", payload: { regErrors: regErrors, validFields: user } });
 	}
 });
 
