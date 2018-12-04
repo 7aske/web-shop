@@ -79,43 +79,61 @@ function comparePasswords(hashed, notHashed) {
 }
 exports.comparePasswords = comparePasswords;
 function validate(user) {
-    var onlyAlphanumeric = new RegExp(/^[^.-][a-zA-z0-9.-]+[^.-]$/);
-    var onlyCharacters = new RegExp(/^[a-zA-Z]+$/);
-    var email = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-    var regErrors = {
-        username: [],
-        password: [],
-        email: [],
-        firstName: [],
-        lastName: []
-    };
-    if (user.username.length == 0)
-        regErrors.username.push("Username required.");
-    if (!onlyAlphanumeric.test(user.username))
-        regErrors.username.push("Only alphanumeric characters.");
-    if (user.password.length == 0)
-        regErrors.password.push("Password required.");
-    if (user.email.length == 0)
-        regErrors.email.push("Email required.");
-    if (!email.test(user.email))
-        regErrors.email.push("Invalid email.");
-    if (user.firstName.length == 0)
-        regErrors.firstName.push("First name required.");
-    if (!onlyCharacters.test(user.firstName))
-        regErrors.firstName.push("Only characters.");
-    if (user.lastName.length == 0)
-        regErrors.lastName.push("Last name required.");
-    if (!onlyCharacters.test(user.lastName))
-        regErrors.lastName.push("Only characters.");
-    var check = false;
-    console.log(user.lastName, user.firstName);
-    Object.keys(regErrors).forEach(function (e) {
-        if (regErrors[e].length > 0)
-            check = true;
+    return __awaiter(this, void 0, void 0, function () {
+        var onlyAlphanumeric, onlyCharacters, email, regErrors, check;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    onlyAlphanumeric = new RegExp(/^[^.-][a-zA-z0-9.-]+[^.-]$/);
+                    onlyCharacters = new RegExp(/^[a-zA-Z]+$/);
+                    email = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+                    regErrors = {
+                        username: [],
+                        password: [],
+                        email: [],
+                        firstName: [],
+                        lastName: []
+                    };
+                    return [4 /*yield*/, UserModel.findOne({ username: user.username }).exec()];
+                case 1:
+                    if (_a.sent())
+                        regErrors.username.push("Username taken.");
+                    if (user.username.length < 5)
+                        regErrors.username.push("Minimum 5 characters.");
+                    if (!onlyAlphanumeric.test(user.username))
+                        regErrors.username.push("Only alphanumeric characters.");
+                    if (user.password.length < 4)
+                        regErrors.password.push("Minimum 4 characters.");
+                    if (user.password != user.confirm)
+                        regErrors.password.push("Passwords don't match.");
+                    return [4 /*yield*/, UserModel.findOne({ email: user.email }).exec()];
+                case 2:
+                    if (_a.sent())
+                        regErrors.email.push("Email taken.");
+                    if (user.email.length == 0)
+                        regErrors.email.push("Email required.");
+                    if (!email.test(user.email))
+                        regErrors.email.push("Invalid email.");
+                    if (user.firstName.length == 0)
+                        regErrors.firstName.push("First name required.");
+                    if (!onlyCharacters.test(user.firstName))
+                        regErrors.firstName.push("Only characters.");
+                    if (user.lastName.length == 0)
+                        regErrors.lastName.push("Last name required.");
+                    if (!onlyCharacters.test(user.lastName))
+                        regErrors.lastName.push("Only characters.");
+                    check = false;
+                    Object.keys(regErrors).forEach(function (e) {
+                        if (regErrors[e].length > 0)
+                            check = true;
+                    });
+                    if (check)
+                        return [2 /*return*/, regErrors];
+                    else
+                        return [2 /*return*/, null];
+                    return [2 /*return*/];
+            }
+        });
     });
-    if (check)
-        return regErrors;
-    else
-        return null;
 }
 exports.validate = validate;

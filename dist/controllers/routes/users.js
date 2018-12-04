@@ -80,42 +80,36 @@ usersRouter.get("/register", function (req, res) {
     res.render("register.handlebars", { title: "Register" });
 });
 usersRouter.post("/register", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, regErrors, check, newUser;
+    var user, regErrors, newUser;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 user = {
-                    username: req.body.username,
+                    username: req.body.username.toLowerCase(),
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    email: req.body.email,
-                    password: req.body.password
+                    email: req.body.email.toLowerCase(),
+                    password: req.body.password,
+                    confirm: req.body.confirm
                 };
-                regErrors = User_1.validate(user);
-                if (!!regErrors) return [3 /*break*/, 5];
-                return [4 /*yield*/, User_1.default.find({ $or: [{ username: user.username }, { email: user.email }] }).exec()];
+                return [4 /*yield*/, User_1.validate(user)];
             case 1:
-                check = _a.sent();
-                console.log(check);
-                if (!(check.length == 0)) return [3 /*break*/, 3];
+                regErrors = _a.sent();
+                if (!!regErrors) return [3 /*break*/, 3];
                 return [4 /*yield*/, User_1.createUser(new User_1.default(user))];
             case 2:
                 newUser = _a.sent();
                 if (newUser) {
-                    res.render("login.handlebars");
+                    res.render("login.handlebars", { title: "Login", payload: { messages: ["Successfuly registered."] } });
                 }
                 else {
-                    res.status(500).send({ error: "Something went wrong" });
+                    res.render("register.handlebars", { title: "Register", payload: { errors: ["Something went wrong."] } });
                 }
                 return [3 /*break*/, 4];
             case 3:
-                res.status(401).send({ error: "Username/e-mail taken." });
-                _a.label = 4;
-            case 4: return [3 /*break*/, 6];
-            case 5:
                 res.render("register.handlebars", { title: "Register", payload: { regErrors: regErrors, validFields: user } });
-                _a.label = 6;
-            case 6: return [2 /*return*/];
+                _a.label = 4;
+            case 4: return [2 /*return*/];
         }
     });
 }); });
@@ -128,15 +122,17 @@ usersRouter.get("/login", function (req, res) {
     }
 });
 usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var user, loginErrors, foundUser, token;
+    var cred, pass, user, foundUser, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, User_1.default.findOne({
-                    $or: [{ username: req.body.username }, { email: req.body.username }]
-                }).exec()];
+            case 0:
+                cred = req.body.username.toLowerCase();
+                pass = req.body.password;
+                return [4 /*yield*/, User_1.default.findOne({
+                        $or: [{ username: cred }, { email: cred }]
+                    }).exec()];
             case 1:
                 user = _a.sent();
-                loginErrors = [];
                 if (user) {
                     foundUser = {
                         pid: user.pid,
@@ -146,7 +142,7 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                         email: user.email
                     };
                     try {
-                        if (User_1.comparePasswords(user.password, req.body.password)) {
+                        if (User_1.comparePasswords(user.password, pass)) {
                             token = jwt.sign(foundUser, config_1.default.hash.salt, {
                                 expiresIn: "1d"
                             });
@@ -154,18 +150,15 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                             res.redirect("/users/dashboard");
                         }
                         else {
-                            loginErrors.push("Invalid password.");
-                            res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
+                            res.render("login.handlebars", { title: "Login", payload: { errors: ["Invalid password."] } });
                         }
                     }
                     catch (err) {
-                        loginErrors.push("Something went wrong.");
-                        res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
+                        res.render("login.handlebars", { title: "Login", payload: { errors: ["Something went wrong."] } });
                     }
                 }
                 else {
-                    loginErrors.push("User not found.");
-                    res.render("login.handlebars", { title: "Login", payload: { errors: loginErrors } });
+                    res.render("login.handlebars", { title: "Login", payload: { errors: ["Invalid password."] } });
                 }
                 return [2 /*return*/];
         }

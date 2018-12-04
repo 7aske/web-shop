@@ -4,12 +4,19 @@
 
         </div>
         <div class="col-md-6 col-sm-12 pt-2">
+            <div>
+                {{#each payload.errors}}
+                <div class="alert alert-danger">
+                    {{this}}
+                </div>
+                {{/each}}
+            </div>
             <form class="card p-3 bg-light" method="post" action="register">
                 <div class="form-group">
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" value="{{payload.validFields.email}}">
                     {{#each payload.regErrors.email}}
-                    <small class="alert alert-danger form-text font-weight-bold">{{this}}</small>
+                    <small class="alert alert-danger form-text font-weight-bold p-1 pl-2">{{this}}</small>
                     {{/each}}
                 </div>
                 <div class="form-group">
@@ -17,7 +24,7 @@
                     <input type="text" class="form-control" id="username" name="username" placeholder="Enter username"
                         value="{{payload.validFields.username}}">
                     {{#each payload.regErrors.username}}
-                    <small class="alert alert-danger form-text font-weight-bold">{{this}}</small>
+                    <small class="alert alert-danger form-text font-weight-bold p-1 pl-2">{{this}}</small>
                     {{/each}}
                 </div>
                 <div class="form-group">
@@ -25,7 +32,7 @@
                     <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name"
                         value="{{payload.validFields.firstName}}">
                     {{#each payload.regErrors.firstName}}
-                    <small class="alert alert-danger form-text font-weight-bold">{{this}}</small>
+                    <small class="alert alert-danger form-text font-weight-bold p-1 pl-2">{{this}}</small>
                     {{/each}}
                 </div>
                 <div class="form-group">
@@ -33,14 +40,15 @@
                     <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name"
                         value="{{payload.validFields.lastName}}">
                     {{#each payload.regErrors.lastName}}
-                    <small class="alert alert-danger form-text font-weight-bold">{{this}}</small>
+                    <small class="alert alert-danger form-text font-weight-bold p-1 pl-2">{{this}}</small>
                     {{/each}}
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <input type="password" class="form-control" id="confirm" name="confirm" placeholder="Confirm password">
                     {{#each payload.regErrors.password}}
-                    <small class="alert alert-danger form-text font-weight-bold">{{this}}</small>
+                    <small class="alert alert-danger form-text font-weight-bold p-1 pl-2">{{this}}</small>
                     {{/each}}
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
