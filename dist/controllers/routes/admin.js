@@ -59,13 +59,12 @@ adminRouter.get("/", function (req, res) {
 });
 adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        if (req.user) {
-            //const admin = Admin.find({uid:})
+        if (req.admin) {
             res.render("adminDashboard.handlebars", {
                 title: "Admin Dashboard",
                 admin: true,
                 payload: {
-                    user: req.user,
+                    user: req.admin,
                     users: req.users,
                     products: req.products,
                     errors: req.errors,
@@ -80,7 +79,7 @@ adminRouter.get("/dashboard", getProducts_1.default, getUsers_1.default, functio
     });
 }); });
 adminRouter.get("/login", function (req, res) {
-    if (req.user) {
+    if (req.admin) {
         res.redirect("/admin/dashboard");
     }
     else {
@@ -88,7 +87,7 @@ adminRouter.get("/login", function (req, res) {
             title: "Admin Login",
             admin: true,
             payload: {
-                user: req.user
+                user: req.admin
             }
         });
     }
@@ -116,7 +115,7 @@ adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
                     token = jwt.sign(foundAdmin, config_1.default.hash.salt, {
                         expiresIn: "2h"
                     });
-                    res.setHeader("Set-Cookie", "user=" + token + "; Path=/admin;");
+                    res.setHeader("Set-Cookie", "user=" + token + "; Path=/;");
                     res.redirect("/admin/dashboard");
                 }
                 else {
@@ -136,6 +135,8 @@ adminRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
     });
 }); });
 adminRouter.get("/logout", function (req, res) {
+    req.admin = undefined;
+    req.user = undefined;
     res.clearCookie("user");
     res.redirect("/admin/login");
 });

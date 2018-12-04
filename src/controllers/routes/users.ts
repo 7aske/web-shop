@@ -100,6 +100,8 @@ usersRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 usersRouter.get("/logout", (req: Request, res: Response) => {
+	req.admin = undefined;
+	req.user = undefined;
 	res.clearCookie("user");
 	res.redirect("/users/login");
 });

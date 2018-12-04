@@ -174,6 +174,8 @@ usersRouter.post("/login", function (req, res) { return __awaiter(_this, void 0,
     });
 }); });
 usersRouter.get("/logout", function (req, res) {
+    req.admin = undefined;
+    req.user = undefined;
     res.clearCookie("user");
     res.redirect("/users/login");
 });

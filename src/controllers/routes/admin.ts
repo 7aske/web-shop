@@ -14,13 +14,12 @@ adminRouter.get("/", (req: Request, res: Response) => {
 });
 
 adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: Response) => {
-	if (req.user) {
-		//const admin = Admin.find({uid:})
+	if (req.admin) {
 		res.render("adminDashboard.handlebars", {
 			title: "Admin Dashboard",
 			admin: true,
 			payload: {
-				user: req.user,
+				user: req.admin,
 				users: req.users,
 				products: req.products,
 				errors: req.errors,
@@ -33,14 +32,14 @@ adminRouter.get("/dashboard", getProducts, getUsers, async (req: Request, res: R
 });
 
 adminRouter.get("/login", (req: Request, res: Response) => {
-	if (req.user) {
+	if (req.admin) {
 		res.redirect("/admin/dashboard");
 	} else {
 		res.render("login.handlebars", {
 			title: "Admin Login",
 			admin: true,
 			payload: {
-				user: req.user
+				user: req.admin
 			}
 		});
 	}
@@ -60,7 +59,7 @@ adminRouter.post("/login", async (req: Request, res: Response) => {
 				const token = jwt.sign(foundAdmin, config.hash.salt, {
 					expiresIn: "2h"
 				});
-				res.setHeader("Set-Cookie", `user=${token}; Path=/admin;`);
+				res.setHeader("Set-Cookie", `user=${token}; Path=/;`);
 				res.redirect("/admin/dashboard");
 			} else {
 				res.status(403).send({ error: "Unauthorized." });
@@ -74,6 +73,8 @@ adminRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 adminRouter.get("/logout", (req: Request, res: Response) => {
+	req.admin = undefined;
+	req.user = undefined;
 	res.clearCookie("user");
 	res.redirect("/admin/login");
 });

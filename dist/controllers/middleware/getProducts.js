@@ -45,7 +45,7 @@ exports.default = (function (req, res, next) { return __awaiter(_this, void 0, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!req.user) return [3 /*break*/, 2];
+                if (!req.admin) return [3 /*break*/, 2];
                 return [4 /*yield*/, Product_1.default.find({}).exec()];
             case 1:
                 products = _a.sent();
