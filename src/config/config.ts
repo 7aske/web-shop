@@ -39,7 +39,7 @@ if (configJSON.mongod.path.length == 0)
 					.toString()
 					.split("\r\n")[0];
 if (configJSON.mongod.conf.length == 0) configJSON.mongod.conf = join(process.cwd(), "dist/config/mongod.cfg");
-if (isNaN(configJSON.serverPort)) configJSON.serverPort = 3000;
+if (isNaN(configJSON.serverPort)) configJSON.serverPort = parseInt(process.env.PORT) || 3000;
 if (!existsSync(configJSON.db.path)) mkdirSync(configJSON.db.path, { recursive: true });
 const config: Config = configJSON;
 

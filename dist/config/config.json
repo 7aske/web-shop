@@ -16,7 +16,7 @@
 		"path": "",
 		"conf": ""
 	},
-	"serverPort": 3000,
+	"serverPort": null,
 	"hash": {
 		"salt": "saltystring",
 		"rounds": 10
