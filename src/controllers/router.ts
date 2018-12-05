@@ -1,6 +1,5 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 
-// Routes
 import rootRouter from "./routes/root";
 import adminRouter from "./routes/admin";
 import usersRouter from "./routes/users";
