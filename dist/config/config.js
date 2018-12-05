@@ -24,7 +24,7 @@ if (configJSON.mongod.path.length == 0)
                 .split("\r\n")[0];
 if (configJSON.mongod.conf.length == 0)
     configJSON.mongod.conf = path_1.join(process.cwd(), "dist/config/mongod.cfg");
-if (isNaN(configJSON.serverPort))
+if (isNaN(parseInt(configJSON.serverPort)))
     configJSON.serverPort = parseInt(process.env.PORT) || 3000;
 if (!fs_1.existsSync(configJSON.db.path))
     fs_1.mkdirSync(configJSON.db.path, { recursive: true });
