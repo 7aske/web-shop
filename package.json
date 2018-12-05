@@ -2,7 +2,7 @@
 	"name": "web-shop",
 	"version": "1.0.0",
 	"description": "",
-	"main": "./dist/app.js",
+	"main": "./dist/controllers/server.js",
 	"dependencies": {
 		"@types/body-parser": "^1.17.0",
 		"@types/cookie-parser": "^1.4.1",
