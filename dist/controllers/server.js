@@ -18,11 +18,17 @@ mongoose_1.default.Promise = global.Promise;
 var PORT = config_1.default.serverPort;
 var DB_URL = config_1.default.db.url;
 var server = express_1.default();
-var mongod = child_process_1.exec("mongod --config " + config_1.default.mongod.conf);
-mongoose_1.default
-    .connect(DB_URL, { useNewUrlParser: true })
-    .then(function () { return console.log("Conected to " + DB_URL); })
-    .catch(function () { return console.log("Failed connecting to " + DB_URL); });
+console.log("mongod --config " + config_1.default.mongod.conf);
+var mongod = child_process_1.spawn("mongod", ["--config", config_1.default.mongod.conf]);
+mongod.stdout.on("data", function (data) {
+    console.log(data.toString());
+});
+setTimeout(function () {
+    mongoose_1.default
+        .connect(DB_URL, { useNewUrlParser: true })
+        .then(function () { return console.log("Connected to " + DB_URL); })
+        .catch(function (err) { return console.log(err); });
+}, 2000);
 server.use(express_1.default.static(path_1.join(process.cwd(), "dist/views")));
 server.set("views", path_1.join(process.cwd(), "dist/views/layouts"));
 server.engine("handlebars", express_handlebars_1.default({ defaultLayout: "main", layoutsDir: server.get("views") }));

@@ -3,5 +3,4 @@ dist/database/db/**
 dist/database/uploads/**
 .vs
 .vscode
-
 .idea
